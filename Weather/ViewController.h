@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RequestManager.h"
+#import "DataModel.h"
 
 @interface ViewController : UIViewController <UITextFieldDelegate>
 

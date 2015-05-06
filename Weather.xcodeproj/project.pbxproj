@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8430F7451AFA9F0D00AAFEA0 /* DataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8430F7441AFA9F0D00AAFEA0 /* DataModel.m */; };
+		845DE9451AFA87080036C1E2 /* RequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 845DE9441AFA87080036C1E2 /* RequestManager.m */; };
 		8485E35D1AF92D4800D59A71 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485E35C1AF92D4800D59A71 /* main.m */; };
 		8485E3601AF92D4800D59A71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485E35F1AF92D4800D59A71 /* AppDelegate.m */; };
 		8485E3631AF92D4800D59A71 /* Weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8485E3611AF92D4800D59A71 /* Weather.xcdatamodeld */; };
@@ -27,6 +29,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8430F7431AFA9F0D00AAFEA0 /* DataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataModel.h; path = Model/DataModel.h; sourceTree = "<group>"; };
+		8430F7441AFA9F0D00AAFEA0 /* DataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DataModel.m; path = Model/DataModel.m; sourceTree = "<group>"; };
+		845DE9431AFA87080036C1E2 /* RequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestManager.h; path = Model/RequestManager.h; sourceTree = "<group>"; };
+		845DE9441AFA87080036C1E2 /* RequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RequestManager.m; path = Model/RequestManager.m; sourceTree = "<group>"; };
 		8485E3571AF92D4800D59A71 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8485E35B1AF92D4800D59A71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8485E35C1AF92D4800D59A71 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -60,6 +66,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		845DE9421AFA86920036C1E2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				845DE9431AFA87080036C1E2 /* RequestManager.h */,
+				845DE9441AFA87080036C1E2 /* RequestManager.m */,
+				8430F7431AFA9F0D00AAFEA0 /* DataModel.h */,
+				8430F7441AFA9F0D00AAFEA0 /* DataModel.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		8485E34E1AF92D4800D59A71 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +98,7 @@
 		8485E3591AF92D4800D59A71 /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				845DE9421AFA86920036C1E2 /* Model */,
 				8485E35E1AF92D4800D59A71 /* AppDelegate.h */,
 				8485E35F1AF92D4800D59A71 /* AppDelegate.m */,
 				8485E3641AF92D4800D59A71 /* ViewController.h */,
@@ -218,10 +236,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845DE9451AFA87080036C1E2 /* RequestManager.m in Sources */,
 				8485E3631AF92D4800D59A71 /* Weather.xcdatamodeld in Sources */,
 				8485E3601AF92D4800D59A71 /* AppDelegate.m in Sources */,
 				8485E3661AF92D4800D59A71 /* ViewController.m in Sources */,
 				8485E35D1AF92D4800D59A71 /* main.m in Sources */,
+				8430F7451AFA9F0D00AAFEA0 /* DataModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +426,7 @@
 				8485E37C1AF92D4800D59A71 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8485E37D1AF92D4800D59A71 /* Build configuration list for PBXNativeTarget "WeatherTests" */ = {
 			isa = XCConfigurationList;
@@ -414,6 +435,7 @@
 				8485E37F1AF92D4800D59A71 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
