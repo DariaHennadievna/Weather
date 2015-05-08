@@ -10,10 +10,10 @@
 
 @implementation RequestManager
 
--(instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days
+- (instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days
 {
     self = [super init];
-    if(self)
+    if (self)
     {
         _keyParamForSearch = nameOfCity;
         _countOfDays = days;
@@ -21,16 +21,16 @@
     return self;
 }
 
--(NSURL *)generatingRequestURL
+- (NSURL *)generatingRequestURL
 {
-    if(!self.keyParamForSearch.length)
+    if (!self.keyParamForSearch.length)
     {
         return nil;
     }
     
     NSDictionary *keyParams = @{@"q":self.keyParamForSearch,
                                 @"cnt":self.countOfDays};
-    if(keyParams.allKeys.count)
+    if (keyParams.allKeys.count)
     {
         NSMutableDictionary *temp = [keyParams mutableCopy];
         [temp addEntriesFromDictionary:self.additionalParams];

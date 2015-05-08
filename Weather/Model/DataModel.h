@@ -12,7 +12,9 @@
 
 @property (strong, nonatomic) NSDictionary *data;
 
--(instancetype)initWithWeatherData:(NSDictionary *)weatherData;
--(void)doSomethindWithData;
+- (instancetype)initWithWeatherData:(NSDictionary *)weatherData;
+- (NSDictionary *)gettingCityInfo;
+- (NSArray *)gettingWeatherForecastInfo;
+- (void)savingCityData;
 
 @end

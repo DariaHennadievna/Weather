@@ -22,7 +22,7 @@
 @property (strong, nonatomic) NSString *keyParamForSearch;
 @property (strong, nonatomic) NSString *countOfDays;
 
--(instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days;
--(NSURL *)generatingRequestURL;
+- (instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days;
+- (NSURL *)generatingRequestURL;
 
 @end

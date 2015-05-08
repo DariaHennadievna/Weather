@@ -28,9 +28,9 @@
 
 #pragma mark - Views
 
--(UITextField *)requestCity
+- (UITextField *)requestCity
 {
-    if(!_requestCity)
+    if (!_requestCity)
     {
         _requestCity = [[UITextField alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2 - 135.0f,
                                                                      40.0f, 250.0f, 30.0f)];
@@ -41,9 +41,9 @@
     return _requestCity;
 }
 
--(UIButton *)findButton
+- (UIButton *)findButton
 {
-    if(!_findButton)
+    if (!_findButton)
     {
         _findButton = [[UIButton alloc] initWithFrame:CGRectMake((self.view.bounds.size.width/5 * 4)+20.0f, 43.0f, 25.0f, 24.0f)];
         _findButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ic_btn_search.png"]];
@@ -53,7 +53,7 @@
 
 #pragma mark - Actions
 
--(void)startSearch
+- (void)startSearch
 {
     RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"3"];
     NSURL *myRequest = [myRequestManager generatingRequestURL];
@@ -66,9 +66,12 @@
             NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
                                                                      options:NSJSONReadingAllowFragments error:nil];
             dispatch_async(dispatch_get_main_queue(), ^(){
-                [self updateUIWithData:response];
+                //[self updateUIWithData:response];
                 DataModel *dataModel = [[DataModel alloc] initWithWeatherData:response];
-                [dataModel doSomethindWithData];
+                NSDictionary *newData = [dataModel gettingCityInfo];
+                [dataModel savingCityData];
+                //NSArray *newData = [dataModel gettingWeatherForecastInfo];
+                //NSLog(@"%lu:%@", newData.count, newData);
             });
         });
     }
@@ -79,7 +82,6 @@
 - (void)updateUIWithData:(NSDictionary *)data
 {
     NSLog(@"data: %@", data);
-    
 }
 
 
