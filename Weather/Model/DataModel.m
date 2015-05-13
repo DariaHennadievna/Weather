@@ -117,6 +117,7 @@
 {
     // пока что это вовсе не saving... просто проверка работы метода NSDate в методе saving =)
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:1431252000];
+    
     NSLog(@"date = %@", date);
     //...
 }
