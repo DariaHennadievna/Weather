@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6220.17" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="WeatherForecast" syncable="YES"/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="City" representedClassName="City" syncable="YES">
+        <attribute name="cityID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="forecasts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Forecast" inverseName="city" inverseEntity="Forecast" syncable="YES"/>
+    </entity>
+    <entity name="Forecast" representedClassName="Forecast" syncable="YES">
+        <attribute name="clouds" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="humidity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pressure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempDay" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempEven" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempMax" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempMin" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempMorn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempNight" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weatherID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weatherStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="windDirection" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="windSpeed" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="city" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="forecasts" inverseEntity="City" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="WeatherForecast" positionX="-63" positionY="-18" width="128" height="45"/>
+        <element name="City" positionX="-333" positionY="-18" width="128" height="133"/>
+        <element name="Forecast" positionX="-63" positionY="-18" width="128" height="283"/>
     </elements>
 </model>

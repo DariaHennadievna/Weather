@@ -112,21 +112,111 @@
     return [forecastDaily copy];
 }
 
+
+
+
 #pragma mark - save in Core Data
-- (void)savingCityData
+
+- (void)savingCityData:(NSDictionary *)data
 {
-    // пока что это вовсе не saving... просто проверка работы метода NSDate в методе saving =)
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:1431252000];
+    BOOL isCityInDatabase = NO;
+    NSString *cityID = [data objectForKey:CITY_ID];
     
-    NSLog(@"date = %@", date);
-    //...
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+   
+    if (allCities)
+    {
+        for (City *myCity in allCities)
+        {
+            if ([myCity.cityID isEqual:cityID])
+            {
+                isCityInDatabase = YES;
+                break;
+            }
+        }
+        if (!isCityInDatabase)
+        {
+            [City cityWithData:data];
+        }
+        else
+        {
+            isCityInDatabase = NO;
+        }
+        
+        NSError *error = nil;
+        if (![context save:&error])
+        {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate.
+            //You should not use this function in a shipping application, although it may be
+            //useful during development.
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }
+    else
+    {
+        [City cityWithData:data];
+    }
 }
 
+- (NSMutableArray *)gettingForecastsForCity:(City *)city
+{
+    NSMutableArray *allForecasts = [[NSMutableArray alloc] init];
+    for (Forecast *myForecast in city.forecasts)
+    {
+        [allForecasts addObject:myForecast];
+    }
+    
+    return allForecasts;
+}
 
+- (void)savingForecastData:(NSArray *)data forCity:(City *)city
+{
+    BOOL isForecastInDatabase = NO;
+    for (NSDictionary *dataForDay in data)
+    {
+        for (Forecast *myForecast in city.forecasts)
+        {
+            if ([[dataForDay objectForKey:DATE] isEqualToNumber:myForecast.date])
+            {
+                isForecastInDatabase = YES;
+            }
+        }
+        
+        if (!isForecastInDatabase)
+        {
+            Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay];
+            [city addForecastsObject:newForecast];
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            NSManagedObjectContext *context = appDelegate.managedObjectContext;
+            
+            NSError *error = nil;
+            if (![context save:&error])
+            {
+                
+                // Replace this implementation with code to handle the error appropriately.
+                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                abort();
+            }
+        }
+        else
+        {
+            isForecastInDatabase = NO;
+        }
+    }
+}
 
 
 - (void)doSomethindWithData // method means nothing
 {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:1431252000];
+    NSLog(@"date = %@", date);
+    
     NSLog(@"%lu", self.data.allKeys.count);
     NSMutableArray *keys = [[NSMutableArray alloc] init];
     for (id key in self.data)

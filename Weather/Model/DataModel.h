@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "City+Creating.h"
+#import "Forecast+Creating.h"
+
 
 @interface DataModel : NSObject
 
@@ -15,6 +18,6 @@
 - (instancetype)initWithWeatherData:(NSDictionary *)weatherData;
 - (NSDictionary *)gettingCityInfo;
 - (NSArray *)gettingWeatherForecastInfo;
-- (void)savingCityData;
+- (void)savingCityData:(NSDictionary *)data;
 
 @end
