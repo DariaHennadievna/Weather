@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "CityInfoTableViewCell.h"
-#import "requestTableViewCell.h"
+//#import "requestTableViewCell.h"
 #import "WeatherTodayTableViewCell.h"
 #import "WeatherForecastTableViewCell.h"
 #import "RequestManager.h"
 #import "DataModel.h"
 #import "DetailWeatherViewController.h"
+#import "AppDelegate.h"
 
-@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, requestTableCellDelegate>
+@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end

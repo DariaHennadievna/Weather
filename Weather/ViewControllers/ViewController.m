@@ -68,9 +68,9 @@
             dispatch_async(dispatch_get_main_queue(), ^(){
                 //[self updateUIWithData:response];
                 DataModel *dataModel = [[DataModel alloc] initWithWeatherData:response];
-                NSDictionary *newCityData = [dataModel gettingCityInfo];
+                //NSDictionary *newCityData = [dataModel gettingCityInfo];
                 //[dataModel savingCityData];
-                NSArray *newWeatherData = [dataModel gettingWeatherForecastInfo];
+               // NSArray *newWeatherData = [dataModel gettingWeatherForecastInfo];
                 //NSLog(@"%lu:%@", newData.count, newData);
             });
         });

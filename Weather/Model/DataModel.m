@@ -160,6 +160,17 @@
     else
     {
         [City cityWithData:data];
+        
+        NSError *error = nil;
+        if (![context save:&error])
+        {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate.
+            //You should not use this function in a shipping application, although it may be
+            //useful during development.
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
     }
 }
 
@@ -174,20 +185,45 @@
     return allForecasts;
 }
 
+
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city
 {
     BOOL isForecastInDatabase = NO;
     for (NSDictionary *dataForDay in data)
     {
-        for (Forecast *myForecast in city.forecasts)
+        if (city.forecasts)
         {
-            if ([[dataForDay objectForKey:DATE] isEqualToNumber:myForecast.date])
+            for (Forecast *myForecast in city.forecasts)
             {
-                isForecastInDatabase = YES;
+                if ([[dataForDay objectForKey:DATE] isEqualToNumber:myForecast.date])
+                {
+                    isForecastInDatabase = YES;
+                }
+            }
+            
+            if (!isForecastInDatabase)
+            {
+                Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay];
+                [city addForecastsObject:newForecast];
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                NSManagedObjectContext *context = appDelegate.managedObjectContext;
+                
+                NSError *error = nil;
+                if (![context save:&error])
+                {
+                    
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                    abort();
+                }
+            }
+            else
+            {
+                isForecastInDatabase = NO;
             }
         }
-        
-        if (!isForecastInDatabase)
+        else
         {
             Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay];
             [city addForecastsObject:newForecast];
@@ -203,10 +239,6 @@
                 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
                 abort();
             }
-        }
-        else
-        {
-            isForecastInDatabase = NO;
         }
     }
 }

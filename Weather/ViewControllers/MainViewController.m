@@ -10,8 +10,13 @@
 
 @interface MainViewController ()
 
+@property (nonatomic) UITextField *requestCity;
+@property (nonatomic) UIButton *findButton;
+
 @property (nonatomic)  UITableView *tableView;
 @property (nonatomic) NSString *nameForDestinationVC;
+
+@property (nonatomic) DataModel *dataModel;
 
 
 @end
@@ -24,8 +29,10 @@
     self.title = @"Weather";
     
     [self.view addSubview:self.tableView];
-    [self.tableView registerClass:[requestTableViewCell class]
-           forCellReuseIdentifier:NSStringFromClass([requestTableViewCell class])];
+    [self.view addSubview:self.requestCity];
+    [self.view addSubview:self.findButton];
+    [self.findButton addTarget:self action:@selector(startSearch) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.tableView registerClass:[WeatherTodayTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([WeatherTodayTableViewCell class])];
     [self.tableView registerClass:[CityInfoTableViewCell class]
@@ -36,36 +43,60 @@
 
 #pragma mark - Views
 
+- (UITextField *)requestCity
+{
+    if (!_requestCity)
+    {
+        _requestCity = [[UITextField alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2 - 135.0f,
+                                                                     80.0f, 250.0f, 30.0f)];
+        _requestCity.borderStyle = UITextBorderStyleRoundedRect;
+        _requestCity.placeholder = @"enter the name of your city";
+    }
+    return _requestCity;
+}
+
+- (UIButton *)findButton
+{
+    if (!_findButton)
+    {
+        _findButton = [[UIButton alloc] initWithFrame:CGRectMake((self.view.bounds.size.width/5 * 4)+20.0f, 83.0f, 25.0f, 24.0f)];
+        _findButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ic_btn_search.png"]];
+    }
+    return _findButton;
+}
+
+
 -(UITableView *)tableView
 {
     if (!_tableView)
     {
-        _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 120.0f, self.view.frame.size.width, self.view.frame.size.height-80.0f) style:UITableViewStylePlain];
         _tableView.delegate   = self;
         _tableView.dataSource = self;
     }
     return _tableView;
 }
 
+
 #pragma mark - Table View Data Source
 
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4; //  секции в Table View
+    return 3; //  секции в Table View
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) // для первой секции с индексом 0 только одна клетка.
+    /*if (section == 0) // для первой секции с индексом 0 только одна клетка.
+    {
+        return 1;
+    }*/
+    if (section == 0)
     {
         return 1;
     }
     else if (section == 1)
-    {
-        return 1;
-    }
-    else if (section == 2)
     {
         return 1;
     }
@@ -79,22 +110,22 @@
 // определяем что будет содержать ячейка
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0)
+    /*if (indexPath.section == 0)
     {
         requestTableViewCell *requestTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([requestTableViewCell class]) forIndexPath:indexPath];
         requestTableCell.selectionStyle = UITableViewCellSelectionStyleNone;
         requestTableCell.delegate = self;
         return requestTableCell;
 
-    }
-    else if (indexPath.section == 1)
+    }*/
+    if (indexPath.section == 0)
     {
         CityInfoTableViewCell *cityInfoTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([CityInfoTableViewCell class]) forIndexPath:indexPath];
         cityInfoTableCell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cityInfoTableCell;
         
     }
-    else if (indexPath.section == 2)
+    else if (indexPath.section == 1)
     {
         WeatherTodayTableViewCell *weatherTodayTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([WeatherTodayTableViewCell class]) forIndexPath:indexPath];
         weatherTodayTableCell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -118,15 +149,15 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0)
+    /*if (indexPath.section == 0)
     {
         return 50.0f;
-    }
-    else if (indexPath.section == 1)
+    }*/
+    if (indexPath.section == 0)
     {
         return 20.0f;
     }
-    else if (indexPath.section == 2)
+    else if (indexPath.section == 1)
     {
         return 80.0f;
     }
@@ -140,13 +171,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self performSelector:@selector(deselectRowAtIndexPath:) withObject:indexPath afterDelay:0.1f];
-    if (indexPath.section == 2)
+       
+    if (indexPath.section == 1)
     {
         WeatherTodayTableViewCell *myCell = (WeatherTodayTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         self.nameForDestinationVC = myCell.todayIs.text;
         [self performSegueWithIdentifier:@"ShowDetailWeather" sender:self];
     }
-    else if (indexPath.section == 3)
+    else if (indexPath.section == 2)
     {
         WeatherForecastTableViewCell  *cell = (WeatherForecastTableViewCell  *)
                                               [tableView cellForRowAtIndexPath:indexPath];
@@ -161,14 +193,91 @@
     
 }
 
+# pragma mark - data processing
+
+- (void)dataProcessing
+{
+    //NSDictionary *newCityData = [self.dataModel gettingCityInfo];
+    //[dataModel savingCityData];
+    //NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
+    //NSLog(@"%lu:%@", newData.count, newData);
+}
+
+- (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName
+{
+    // If there is the City in database, I will not send my Request. I'll use the data from databese.
+    NSLog(@"I'm here!!!");
+    BOOL isCityInDatabase = NO;
+    BOOL isForecastsForCity = NO;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    
+    if (allCities)
+    {
+        for (City *myCity in allCities)
+        {
+            if ([myCity.name isEqual:citiesName])
+            {
+                isCityInDatabase = YES;
+                NSLog(@"There is this city with name %@ in database.", citiesName);
+                // проверим, есть ли у этого города какие-либо данные
+                if (myCity.forecasts)
+                {
+                     NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
+                }
+                break;
+            }
+        }
+    }
+    else
+    {
+         NSLog(@"there is not city =(!!!");
+    }
+    
+    
+    
+    return isCityInDatabase;
+}
+
+//- (void)gettingCityWithName:
+//{
+    
+//}
+
+
 #pragma mark - Actions
 
-- (void)contactCellPressedButton:(requestTableViewCell *)cell
+- (void)startSearch
 {
-    NSLog(@"Ololololo!!!");
+    BOOL efe = [self checkTheDatabaseForCityWithName:self.requestCity.text];
+    
+    /*RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"3"];
+    NSURL *myRequest = [myRequestManager generatingRequestURL];
+    NSLog(@"myRequest: %@", myRequest);
+    if (myRequest)
+    {
+        // GCD - Grand Central Dispatch.
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(){
+            NSData *data = [NSData dataWithContentsOfURL:myRequest];
+            NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
+                                                                     options:NSJSONReadingAllowFragments error:nil];
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                //[self updateUIWithData:response];
+                DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
+                self.dataModel = myDataModel;
+                [self dataProcessing];
+            });
+        });
+    }*/
 }
 
 
+- (void)updateUIWithData:(NSDictionary *)data
+{
+    NSLog(@"data: %@", data);
+}
 
 
 
