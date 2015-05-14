@@ -18,8 +18,24 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self configureForLabels];
 
 }
+
+-(void)configureForLabels
+{
+    self.cityName.textColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
+    self.weatherStatus.textColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
+    
+}
+
+- (void)reloadData
+{
+    
+}
+
+
+
 
 
 /*

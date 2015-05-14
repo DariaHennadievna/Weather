@@ -11,4 +11,21 @@
 
 @interface DetailWeatherViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UILabel *cityName;
+@property (weak, nonatomic) IBOutlet UILabel *weatherStatus;
+
+
+@property (weak, nonatomic) IBOutlet UILabel *tempMorning;
+@property (weak, nonatomic) IBOutlet UILabel *tempDay;
+@property (weak, nonatomic) IBOutlet UILabel *tempEvening;
+@property (weak, nonatomic) IBOutlet UILabel *tempNight;
+
+@property (weak, nonatomic) IBOutlet UILabel *humidityValue;
+@property (weak, nonatomic) IBOutlet UILabel *pressureValue;
+@property (weak, nonatomic) IBOutlet UILabel *cloudsValue;
+@property (weak, nonatomic) IBOutlet UILabel *windDirectionValue;
+@property (weak, nonatomic) IBOutlet UILabel *windSpeedValue;
+
+- (void)reloadData;
+
 @end
