@@ -10,7 +10,7 @@
 
 @implementation Forecast (Creating)
 
-+ (Forecast *)forecastWithData:(NSDictionary *)data
++ (Forecast *)forecastWithData:(NSDictionary *)data forCity:(City *)myCity
 {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
@@ -33,6 +33,7 @@
         myForecast.weatherID     = [NSString stringWithFormat:@"%@", [data objectForKey:WEATHER_ID]];
         myForecast.date          = [data objectForKey:DATE];
         myForecast.icon          = [NSString stringWithFormat:@"%@", [data objectForKey:ICON]];
+        myForecast.city          = myCity;
        
         
     }

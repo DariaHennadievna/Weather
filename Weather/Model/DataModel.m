@@ -16,6 +16,7 @@
 
 #import "DataModel.h"
 
+
 @implementation DataModel
 
 - (instancetype)initWithWeatherData:(NSDictionary *)weatherData
@@ -119,30 +120,43 @@
 
 - (void)savingCityData:(NSDictionary *)data
 {
+    NSLog(@"DataCity is %@", data);
     BOOL isCityInDatabase = NO;
-    NSString *cityID = [data objectForKey:CITY_ID];
+    NSString *cityID = [NSString stringWithFormat:@"%@",[data objectForKey:CITY_ID]];
+    NSLog(@"Data is %@", cityID);
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
     NSArray *allCities = [context executeFetchRequest:request error:nil];
    
-    if (allCities)
+    if (allCities.count)
     {
+        NSLog(@"Count of city %lu", allCities.count);
         for (City *myCity in allCities)
         {
-            if ([myCity.cityID isEqual:cityID])
+            NSLog(@"myCity.cityID is %@", myCity.cityID);
+            if ([myCity.cityID isEqualToString:cityID])
             {
                 isCityInDatabase = YES;
+                NSLog(@"This city there is in Database");
+                /*if (myCity.forecasts.count < MIN_COUNT_FORECAST_IN_DATABASE)
+                {
+                    NSLog(@"Count of forecasts < MIN_COUNT_FORECAST_IN_DATABASE");
+                    [self savingForecastData:<#(NSArray *)#> forCity:<#(City *)#>]
+                }*/
                 break;
             }
         }
         if (!isCityInDatabase)
         {
+            NSLog(@"This city there is not in Database");
+            NSLog(@"We will save its");
             [City cityWithData:data];
         }
         else
         {
+            NSLog(@"We will not save its");
             isCityInDatabase = NO;
         }
         
@@ -185,25 +199,51 @@
     return allForecasts;
 }
 
+- (City *)gettingCityWithName:(NSString *)citiesName
+{
+    //NSString *cityID = [NSString stringWithFormat:@"%@",[data objectForKey:citiesName]];
+    //NSLog(@"Data is %@", cityID);
+    City *returningCity;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    for (City *myCity in allCities)
+    {
+        if ([myCity.name isEqualToString:citiesName])
+        {
+            NSLog(@"citiesName is %@", myCity.name);
+            returningCity = myCity;
+            break;
+        }
+    }
+    return returningCity;
+}
+
 
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city
 {
     BOOL isForecastInDatabase = NO;
     for (NSDictionary *dataForDay in data)
     {
-        if (city.forecasts)
+        NSLog(@"Я внутри массива data");
+        NSLog(@"Количество прогнозов для этого города сшставляет %lu штук", city.forecasts.count);
+        if (city.forecasts.count)
         {
+            NSLog(@"Count of city.forecasts is %lu", city.forecasts.count);
             for (Forecast *myForecast in city.forecasts)
             {
                 if ([[dataForDay objectForKey:DATE] isEqualToNumber:myForecast.date])
                 {
                     isForecastInDatabase = YES;
+                    NSLog(@"Есть такой прогноз");
                 }
             }
             
             if (!isForecastInDatabase)
             {
-                Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay];
+                NSLog(@"Нет такого прогноза. Сохраним иво.");
+                Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay forCity:city];
                 [city addForecastsObject:newForecast];
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 NSManagedObjectContext *context = appDelegate.managedObjectContext;
@@ -221,14 +261,18 @@
             else
             {
                 isForecastInDatabase = NO;
+                NSLog(@"Не будем сохранять этот прогноз.");
             }
         }
         else
         {
-            Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay];
-            [city addForecastsObject:newForecast];
+            NSLog(@"Вообще нет никаких прогнозов.");
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             NSManagedObjectContext *context = appDelegate.managedObjectContext;
+
+            Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay forCity:city];
+            [city addForecastsObject:newForecast];
+            NSLog(@"Количество прогнозов %lu ", city.forecasts.count);
             
             NSError *error = nil;
             if (![context save:&error])

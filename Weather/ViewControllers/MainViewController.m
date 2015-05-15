@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+//#define MIN_COUNT_FORECAST_IN_DATABASE 6
 
 @interface MainViewController ()
 
@@ -39,6 +40,13 @@
            forCellReuseIdentifier:NSStringFromClass([CityInfoTableViewCell class])];
     [self.tableView registerClass:[WeatherForecastTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([WeatherForecastTableViewCell class])];
+    
+    // i'm going to check database for outdated forecast data
+    
+    // if I wish, I can delete all cities from the database
+    //[self deleteAllCitiesFromDatabase];
+    
+    
 }
 
 #pragma mark - Views
@@ -106,7 +114,6 @@
     }
 }
 
-
 // определяем что будет содержать ячейка
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -167,7 +174,6 @@
     }
 }
 
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self performSelector:@selector(deselectRowAtIndexPath:) withObject:indexPath afterDelay:0.1f];
@@ -193,19 +199,24 @@
     
 }
 
-# pragma mark - data processing
+
+
+# pragma mark - Data Processing
 
 - (void)dataProcessing
 {
-    //NSDictionary *newCityData = [self.dataModel gettingCityInfo];
-    //[dataModel savingCityData];
-    //NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
-    //NSLog(@"%lu:%@", newData.count, newData);
+    NSDictionary *newCityData = [self.dataModel gettingCityInfo];
+    [self.dataModel savingCityData:newCityData];
+    
+    NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
+    City *currentCity = [self.dataModel gettingCityWithName:self.requestCity.text];
+    [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
+    
 }
 
 - (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName
 {
-    // If there is the City in database, I will not send my Request. I'll use the data from databese.
+    // If there is the City in database, I will not send my Request. I'll use the data from the databese.
     NSLog(@"I'm here!!!");
     BOOL isCityInDatabase = NO;
     BOOL isForecastsForCity = NO;
@@ -214,7 +225,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
     NSArray *allCities = [context executeFetchRequest:request error:nil];
     
-    if (allCities)
+    if (allCities.count)
     {
         for (City *myCity in allCities)
         {
@@ -223,9 +234,10 @@
                 isCityInDatabase = YES;
                 NSLog(@"There is this city with name %@ in database.", citiesName);
                 // проверим, есть ли у этого города какие-либо данные
-                if (myCity.forecasts)
+                if (myCity.forecasts.count >= MIN_COUNT_FORECAST_IN_DATABASE)
                 {
-                     NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
+                    isForecastsForCity = YES;
+                    NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
                 }
                 break;
             }
@@ -236,41 +248,69 @@
          NSLog(@"there is not city =(!!!");
     }
     
+    if (!isCityInDatabase)
+    {
+        return NO;
+    }
+    else if (isCityInDatabase && !isForecastsForCity)
+    {
+        return NO;
+    }
+    else //if (isCityInDatabase &&  isForecastsForCity )
+    {
+        return YES;
+    }
     
-    
-    return isCityInDatabase;
 }
 
-//- (void)gettingCityWithName:
-//{
-    
-//}
+- (void) deleteAllCitiesFromDatabase
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    for (City *myCity in allCities)
+    {
+        [context deleteObject:myCity];
+        [appDelegate saveContext];
+    }
+}
 
 
-#pragma mark - Actions
+#pragma mark - Actions. Get data.
 
 - (void)startSearch
 {
-    BOOL efe = [self checkTheDatabaseForCityWithName:self.requestCity.text];
-    
-    /*RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"3"];
-    NSURL *myRequest = [myRequestManager generatingRequestURL];
-    NSLog(@"myRequest: %@", myRequest);
-    if (myRequest)
+    BOOL isDataInDatabase = [self checkTheDatabaseForCityWithName:self.requestCity.text];
+    if (isDataInDatabase)
     {
-        // GCD - Grand Central Dispatch.
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(){
-            NSData *data = [NSData dataWithContentsOfURL:myRequest];
-            NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
-                                                                     options:NSJSONReadingAllowFragments error:nil];
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                //[self updateUIWithData:response];
-                DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
-                self.dataModel = myDataModel;
-                [self dataProcessing];
+        // find data in database and show it on the UI
+        NSLog(@"Start search in Database");
+    }
+    else
+    {
+        RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"10"];
+        NSURL *myRequest = [myRequestManager generatingRequestURL];
+        NSLog(@"myRequest: %@", myRequest);
+        if (myRequest)
+        {
+            // GCD - Grand Central Dispatch.
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(){
+                NSData *data = [NSData dataWithContentsOfURL:myRequest];
+                NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:NSJSONReadingAllowFragments error:nil];
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    //[self updateUIWithData:response];
+                    DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
+                    self.dataModel = myDataModel;
+                    if (self.dataModel)
+                    {
+                        [self dataProcessing];
+                    }
+                });
             });
-        });
-    }*/
+        }
+    }
 }
 
 
@@ -283,7 +323,6 @@
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"ShowDetailWeather"])

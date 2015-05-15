@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "City+Creating.h"
 #import "Forecast+Creating.h"
-
+#define MIN_COUNT_FORECAST_IN_DATABASE 6
 
 @interface DataModel : NSObject
 
@@ -18,6 +18,10 @@
 - (instancetype)initWithWeatherData:(NSDictionary *)weatherData;
 - (NSDictionary *)gettingCityInfo;
 - (NSArray *)gettingWeatherForecastInfo;
+
+#pragma mark - Core Data
+- (City *)gettingCityWithName:(NSString *)citiesName;
 - (void)savingCityData:(NSDictionary *)data;
+- (void)savingForecastData:(NSArray *)data forCity:(City *)city;
 
 @end

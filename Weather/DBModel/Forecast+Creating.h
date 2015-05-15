@@ -31,6 +31,6 @@
 
 @interface Forecast (Creating)
 
-+ (Forecast *)forecastWithData:(NSDictionary *)data;
++ (Forecast *)forecastWithData:(NSDictionary *)data forCity:(City *)myCity;
 
 @end
