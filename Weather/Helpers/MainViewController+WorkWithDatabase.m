@@ -75,7 +75,9 @@
 - (void)checkDatabaseForOutdatedForecastDataForCity:(City *)myCity
 {
     NSLog(@"Собираюсь проверить БД на наличие старых прогнозов");
-    NSInteger const diff = -86400;
+    //NSSet *someForecasts = myCity.forecasts;
+    NSMutableSet * trash;
+    int const diff = -86400;
     if (myCity.forecasts.count)
     {
         for (Forecast *myForecast in myCity.forecasts)
@@ -83,9 +85,10 @@
             //[arr addObject:myForecast];
             for (int i = 0; i < myCity.forecasts.count; i++)
             {
-                NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(diff * (i+1))];
+                NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(diff * (i+1)+10800)];
+                NSLog(@">%@", date);
                 
-                NSString *dateComponents = @"MMMM, dd";
+                NSString *dateComponents = @"dd MMMM";
                 NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents
                                                                        options:0 locale:[NSLocale systemLocale]];
                 NSDateFormatter *dateFormatter = [NSDateFormatter new];
@@ -96,19 +99,22 @@
                 
                 NSDate *forecastDate = [NSDate dateWithTimeIntervalSince1970:myInterval];
                 
-                NSString *myForecastDate = [dateFormatter stringFromDate:date];
-                NSString *myDate = [dateFormatter stringFromDate:forecastDate];
+                NSString *myForecastDate = [dateFormatter stringFromDate:forecastDate];
+                
+                NSString *myDate = [dateFormatter stringFromDate:date];
                 
                 if ([myForecastDate isEqualToString:myDate])
                 {
                     NSLog(@"Дата устарела. Удалить ее!!!");
-                    NSLog(@"Было столько прогнозов %lu", myCity.forecasts.count);
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                   // NSLog(@"Было столько прогнозов %lu", myCity.forecasts.count);
+                    /*AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     NSManagedObjectContext *context = appDelegate.managedObjectContext;
                     [myCity removeForecastsObject:myForecast];
                     [context deleteObject:myForecast];
-                    [appDelegate saveContext];
-                    NSLog(@"После удаления стало вот столько %lu", myCity.forecasts.count);
+                    [appDelegate saveContext];*/
+                    [trash addObject:myForecast];
+                   // NSLog(@"После удаления стало вот столько %lu", myCity.forecasts.count);
+                    
                 }
                 else
                 {
@@ -117,11 +123,24 @@
             }
         }
     }
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    if (trash.count)
+    {
+        [myCity removeForecasts:[trash copy]];
+        NSLog(@"%@", trash);
+        for (Forecast * myForecast in trash)
+        {
+            [context deleteObject:myForecast];
+            [appDelegate saveContext];
+        }
+    }
+    
 }
 
 
 - (City *)gettingCityWithName:(NSString *)citiesName
-{    
+{
     City *returningCity;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
@@ -178,32 +197,10 @@
     {
         Forecast *myForecast = [arrayWithAllForecasts objectAtIndex:i];
         [arrayWithSixForecasts addObject:myForecast];
+        NSLog(@">%@", myForecast.date);
     }
     
     return arrayWithSixForecasts;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end

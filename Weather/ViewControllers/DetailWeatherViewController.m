@@ -19,7 +19,14 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self configureForLabels];
+    [self loadData];
 
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    
 }
 
 -(void)configureForLabels
@@ -29,9 +36,22 @@
     
 }
 
-- (void)reloadData
+- (void)loadData
 {
-    
+    NSString *cityName = self.currentCity.name;
+    NSString *country  = self.currentCity.country;
+    self.cityName.text = [NSString stringWithFormat:@"%@, %@", cityName, country];
+    self.weatherStatus.text = self.currentForecast.weatherStatus;
+    self.tempMorning.text = self.currentForecast.tempMorn;
+    self.tempDay.text = self.currentForecast.tempDay;
+    self.tempEvening.text = self.currentForecast.tempEven;
+    self.tempNight.text = self.currentForecast.tempNight;
+    self.humidityValue.text = [NSString stringWithFormat:@"%@,％", self.currentForecast.humidity];
+    self.pressureValue.text = [NSString stringWithFormat:@"%@,hPa", self.currentForecast.pressure];
+    self.cloudsValue.text   = [NSString stringWithFormat:@"%@,％", self.currentForecast.clouds];
+    self.windDirectionValue.text = [NSString stringWithFormat:@"%@º", self.currentForecast.windDirection];
+    self.windSpeedValue.text = [NSString stringWithFormat:@"%@,mps", self.currentForecast.windSpeed];
+        
 }
 
 

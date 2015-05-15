@@ -22,8 +22,7 @@
 
 @property (nonatomic) City *currentCity;
 @property (strong, nonatomic) NSArray *forecastsForUI;
-
-//@property (nonatomic) Forecast *
+@property (nonatomic) Forecast *currentForecast;
 
 @end
 
@@ -246,6 +245,8 @@
     {
         WeatherTodayTableViewCell *myCell = (WeatherTodayTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         self.nameForDestinationVC = myCell.todayIs.text;
+        self.currentForecast = [self configureForWeatherTodayTableViewCell];
+        
         [self performSegueWithIdentifier:@"ShowDetailWeather" sender:self];
     }
     else if (indexPath.section == 2)
@@ -253,6 +254,7 @@
         WeatherForecastTableViewCell  *cell = (WeatherForecastTableViewCell  *)
                                               [tableView cellForRowAtIndexPath:indexPath];
         self.nameForDestinationVC = cell.date.text;
+        self.currentForecast = [[self configureForWeatherForecastTableViewCell] objectAtIndex:indexPath.row];
         [self performSegueWithIdentifier:@"ShowDetailWeather" sender:self];
     }
 }
@@ -295,13 +297,10 @@
 {
     self.title = [self gettingStringWithDate:self.todayIsDate];
     self.currentCity = [self gettingLastCityObjectFromDatabase];
+    [self checkDatabaseForOutdatedForecastDataForCity:self.currentCity];
     self.forecastsForUI = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
 }
 
-- (void)configureForCityInfoTableViewCell
-{
-    
-}
 
 - (Forecast *)configureForWeatherTodayTableViewCell
 {
@@ -339,6 +338,7 @@
 {
     City *myCity = [self gettingCityWithName:self.requestCity.text];
     self.currentCity = myCity;
+    [self checkDatabaseForOutdatedForecastDataForCity:self.currentCity];
     NSArray *myForecasts = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
     self.forecastsForUI = myForecasts;
 }
@@ -391,7 +391,9 @@
         {
             DetailWeatherViewController *detailWeatherVC =
             (DetailWeatherViewController *)segue.destinationViewController;
-            detailWeatherVC.title = self.nameForDestinationVC ;
+            detailWeatherVC.title           = self.nameForDestinationVC ;
+            detailWeatherVC.currentCity     = self.currentCity;
+            detailWeatherVC.currentForecast = self.currentForecast;
         }
     }
 }

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "MainViewController.h"
+#import "Forecast+Creating.h"
+#import "City+Creating.h"
 
 @interface DetailWeatherViewController : UIViewController
 
@@ -26,6 +28,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *windDirectionValue;
 @property (weak, nonatomic) IBOutlet UILabel *windSpeedValue;
 
-- (void)reloadData;
+@property (nonatomic) Forecast *currentForecast;
+@property (nonatomic) City *currentCity;
+
+- (void)loadData;
 
 @end

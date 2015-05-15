@@ -17,4 +17,7 @@
 - (City *)gettingLastCityObjectFromDatabase;
 - (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity;
 
+// 1431687600
+// 1431705600
+
 @end
