@@ -13,5 +13,8 @@
 - (void) deleteAllCitiesFromDatabase;
 - (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName;
 - (void)checkDatabaseForOutdatedForecastDataForCity:(City *)myCity;
+- (City *)gettingCityWithName:(NSString *)citiesName;
+- (City *)gettingLastCityObjectFromDatabase;
+- (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity;
 
 @end

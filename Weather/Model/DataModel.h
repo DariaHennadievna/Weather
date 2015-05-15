@@ -20,7 +20,6 @@
 - (NSArray *)gettingWeatherForecastInfo;
 
 #pragma mark - Core Data
-- (City *)gettingCityWithName:(NSString *)citiesName;
 - (void)savingCityData:(NSDictionary *)data;
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city;
 

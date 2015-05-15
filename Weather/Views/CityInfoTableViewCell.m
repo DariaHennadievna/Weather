@@ -34,7 +34,7 @@
 
 -(void)configureCell
 {
-    self.cityAndCountryName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 120.0f, 20.0f)];
+    self.cityAndCountryName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 150.0f, 20.0f)];
     //self.cityAndCountryName.backgroundColor = [[UIColor yellowColor] colorWithAlphaComponent:0.3f];
     self.cityAndCountryName.textAlignment = NSTextAlignmentLeft;
     self.cityAndCountryName.text = @"Minsk, BY";

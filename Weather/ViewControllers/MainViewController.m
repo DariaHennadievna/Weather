@@ -20,6 +20,10 @@
 @property (nonatomic) DataModel *dataModel;
 @property (nonatomic) NSDate *todayIsDate;
 
+@property (nonatomic) City *currentCity;
+@property (strong, nonatomic) NSArray *forecastsForUI;
+
+//@property (nonatomic) Forecast *
 
 @end
 
@@ -44,6 +48,9 @@
     
     NSDate *date = [NSDate date];
     self.todayIsDate = date;
+    
+    [self configureForUserInterfase];
+    
     
     // if I wish, I can delete all cities from the database
     //[self deleteAllCitiesFromDatabase];
@@ -108,7 +115,7 @@
     }
     else
     {
-        return 4;
+        return [[self configureForWeatherForecastTableViewCell] count];
     }
 }
 
@@ -119,19 +126,90 @@
     {
         CityInfoTableViewCell *cityInfoTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([CityInfoTableViewCell class]) forIndexPath:indexPath];
         cityInfoTableCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if (self.currentCity)
+        {
+            NSString *cityName = self.currentCity.name;
+            NSString *country  = self.currentCity.country;
+            cityInfoTableCell.cityAndCountryName.text = [NSString stringWithFormat:@"%@, %@", cityName, country];
+            cityInfoTableCell.date.text = [self gettingStringWithDate:self.todayIsDate];
+        }
         return cityInfoTableCell;
-        
     }
     else if (indexPath.section == 1)
     {
         WeatherTodayTableViewCell *weatherTodayTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([WeatherTodayTableViewCell class]) forIndexPath:indexPath];
         weatherTodayTableCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if (self.forecastsForUI.count)
+        {
+            Forecast *forecastForToday = [self configureForWeatherTodayTableViewCell];
+            
+            weatherTodayTableCell.todayIs.text = [self gettingStringWithDate:self.todayIsDate];
+            NSString *str1; //= forecastForToday.tempMin;
+            NSString *str2; //= forecastForToday.tempMax;
+            if (forecastForToday.tempMin.length> 4)
+            {
+                str1 = [forecastForToday.tempMin substringToIndex:4];
+            }
+            else
+            {
+                str1 = forecastForToday.tempMin;
+            }
+            
+            if (forecastForToday.tempMax.length> 4)
+            {
+                str2 = [forecastForToday.tempMax substringToIndex:4];
+            }
+            else
+            {
+                str2 = forecastForToday.tempMax;
+            }
+            weatherTodayTableCell.temperature.text = [NSString stringWithFormat:@"%@-%@ºC",
+                                                      str1, str2];
+            
+            NSString *nameForIcon = [forecastForToday.icon stringByAppendingString:@".png"];
+                
+            weatherTodayTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
+        }
+        
         return weatherTodayTableCell;
     }
     else
     {
         WeatherForecastTableViewCell *weatherForecastTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([WeatherForecastTableViewCell class]) forIndexPath:indexPath];
-        
+        NSArray *arrayWithSixForecasts = [self configureForWeatherForecastTableViewCell];
+        if (arrayWithSixForecasts.count)
+        {
+            Forecast *forecastFromArray = [arrayWithSixForecasts objectAtIndex:indexPath.row];
+            NSInteger timeInterval = [forecastFromArray.date integerValue];
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+            NSString *strDate = [self gettingStringWithDate:date];
+            weatherForecastTableCell.date.text = strDate;
+            
+            NSString *str1; //= forecastForToday.tempMin;
+            NSString *str2; //= forecastForToday.tempMax;
+            if (forecastFromArray.tempMin.length> 4)
+            {
+                str1 = [forecastFromArray.tempMin substringToIndex:4];
+            }
+            else
+            {
+                str1 = forecastFromArray.tempMin;
+            }
+            
+            if (forecastFromArray.tempMax.length> 4)
+            {
+                str2 = [forecastFromArray.tempMax substringToIndex:4];
+            }
+            else
+            {
+                str2 = forecastFromArray.tempMax;
+            }
+            weatherForecastTableCell.temperature.text = [NSString stringWithFormat:@"%@-%@ºC",
+                                                         str1, str2];
+            NSString *nameForIcon = [forecastFromArray.icon stringByAppendingString:@".png"];
+            
+            weatherForecastTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
+        }
         return weatherForecastTableCell;
     }
 }
@@ -193,12 +271,77 @@
     [self.dataModel savingCityData:newCityData];
     
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
-    City *currentCity = [self.dataModel gettingCityWithName:self.requestCity.text];
+    City *currentCity = [self gettingCityWithName:self.requestCity.text];
     [self checkDatabaseForOutdatedForecastDataForCity:currentCity];
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
+    
+    [self loadDate];
+    
+    [self.tableView reloadData];
 }
 
-//-()
+- (NSString *)gettingStringWithDate:(NSDate *)date
+{
+    NSString *dateComponents = @"dd MMMM";
+    NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents
+                                                           options:0 locale:[NSLocale systemLocale]];
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = dateFormat;
+    return [dateFormatter stringFromDate:date];
+
+}
+
+- (void)configureForUserInterfase
+{
+    self.title = [self gettingStringWithDate:self.todayIsDate];
+    self.currentCity = [self gettingLastCityObjectFromDatabase];
+    self.forecastsForUI = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
+}
+
+- (void)configureForCityInfoTableViewCell
+{
+    
+}
+
+- (Forecast *)configureForWeatherTodayTableViewCell
+{
+    Forecast *forecastForWeatherToday = [self.forecastsForUI firstObject];
+    if (!forecastForWeatherToday)
+    {
+        return nil;
+    }
+    
+    NSInteger timeInterval = [forecastForWeatherToday.date integerValue];
+    NSDate *forecastDate   = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    NSString *date         = [self gettingStringWithDate:forecastDate];
+    NSString *currentDate  = [self gettingStringWithDate:self.todayIsDate];
+    if (![date isEqualToString:currentDate])
+    {
+        return nil;
+    }
+    
+    return forecastForWeatherToday;
+}
+
+- (NSArray *)configureForWeatherForecastTableViewCell
+{
+    NSMutableArray *myForecasts = [self.forecastsForUI mutableCopy];
+    if (!myForecasts)
+    {
+        return nil;
+    }
+    [myForecasts removeObjectAtIndex:0];
+    NSMutableArray *weatherForecast = myForecasts;
+    return weatherForecast;
+}
+
+-(void)loadDate
+{
+    City *myCity = [self gettingCityWithName:self.requestCity.text];
+    self.currentCity = myCity;
+    NSArray *myForecasts = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
+    self.forecastsForUI = myForecasts;
+}
 
 
 #pragma mark - Actions. Get data.
@@ -210,6 +353,8 @@
     {
         // find data in database and show it on the UI
         NSLog(@"Start search in Database");
+        [self loadDate];
+        [self.tableView reloadData];
     }
     else
     {

@@ -117,8 +117,93 @@
             }
         }
     }
-    
 }
+
+
+- (City *)gettingCityWithName:(NSString *)citiesName
+{    
+    City *returningCity;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    for (City *myCity in allCities)
+    {
+        if ([myCity.name isEqualToString:citiesName])
+        {
+            NSLog(@"citiesName is %@", myCity.name);
+            returningCity = myCity;
+            break;
+        }
+    }
+    return returningCity;
+}
+
+- (City *)gettingLastCityObjectFromDatabase
+{
+    City *myCity;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    if (!allCities.count)
+    {
+        return nil;
+    }
+    myCity = [allCities lastObject];    
+    return myCity;
+}
+
+- (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity
+{
+    NSMutableArray *arrayWithSixForecasts = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayWithAllForecasts = [[NSMutableArray alloc] init];
+    if (!myCity.forecasts.count)
+    {
+        return nil;
+    }
+    
+    for (Forecast *myForecast in myCity.forecasts)
+    {
+        [arrayWithAllForecasts addObject:myForecast];
+    }    
+    
+    NSComparator forecastComparator = ^(Forecast *forecast1, Forecast *forecast2) {
+        return [forecast1.date compare:forecast2.date];
+    };
+    
+    [arrayWithAllForecasts sortUsingComparator:forecastComparator];
+    
+    for (int i = 0; i < MIN_COUNT_FORECAST_IN_DATABASE; i++)
+    {
+        Forecast *myForecast = [arrayWithAllForecasts objectAtIndex:i];
+        [arrayWithSixForecasts addObject:myForecast];
+    }
+    
+    return arrayWithSixForecasts;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @end

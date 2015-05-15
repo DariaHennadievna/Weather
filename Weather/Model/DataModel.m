@@ -199,28 +199,6 @@
     return allForecasts;
 }
 
-- (City *)gettingCityWithName:(NSString *)citiesName
-{
-    //NSString *cityID = [NSString stringWithFormat:@"%@",[data objectForKey:citiesName]];
-    //NSLog(@"Data is %@", cityID);
-    City *returningCity;
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
-    NSArray *allCities = [context executeFetchRequest:request error:nil];
-    for (City *myCity in allCities)
-    {
-        if ([myCity.name isEqualToString:citiesName])
-        {
-            NSLog(@"citiesName is %@", myCity.name);
-            returningCity = myCity;
-            break;
-        }
-    }
-    return returningCity;
-}
-
-
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city
 {
     BOOL isForecastInDatabase = NO;
