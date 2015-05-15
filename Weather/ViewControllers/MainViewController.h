@@ -15,6 +15,7 @@
 #import "DataModel.h"
 #import "DetailWeatherViewController.h"
 #import "AppDelegate.h"
+#import "MainViewController+WorkWithDatabase.h"
 
 @interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 

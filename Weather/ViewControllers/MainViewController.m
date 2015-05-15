@@ -18,6 +18,7 @@
 @property (nonatomic) NSString *nameForDestinationVC;
 
 @property (nonatomic) DataModel *dataModel;
+@property (nonatomic) NSDate *todayIsDate;
 
 
 @end
@@ -41,13 +42,14 @@
     [self.tableView registerClass:[WeatherForecastTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([WeatherForecastTableViewCell class])];
     
-    // i'm going to check database for outdated forecast data
+    NSDate *date = [NSDate date];
+    self.todayIsDate = date;
     
     // if I wish, I can delete all cities from the database
     //[self deleteAllCitiesFromDatabase];
     
-    
 }
+
 
 #pragma mark - Views
 
@@ -96,10 +98,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    /*if (section == 0) // для первой секции с индексом 0 только одна клетка.
-    {
-        return 1;
-    }*/
     if (section == 0)
     {
         return 1;
@@ -117,14 +115,6 @@
 // определяем что будет содержать ячейка
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*if (indexPath.section == 0)
-    {
-        requestTableViewCell *requestTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([requestTableViewCell class]) forIndexPath:indexPath];
-        requestTableCell.selectionStyle = UITableViewCellSelectionStyleNone;
-        requestTableCell.delegate = self;
-        return requestTableCell;
-
-    }*/
     if (indexPath.section == 0)
     {
         CityInfoTableViewCell *cityInfoTableCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([CityInfoTableViewCell class]) forIndexPath:indexPath];
@@ -156,10 +146,6 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*if (indexPath.section == 0)
-    {
-        return 50.0f;
-    }*/
     if (indexPath.section == 0)
     {
         return 20.0f;
@@ -199,8 +185,6 @@
     
 }
 
-
-
 # pragma mark - Data Processing
 
 - (void)dataProcessing
@@ -210,71 +194,11 @@
     
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
     City *currentCity = [self.dataModel gettingCityWithName:self.requestCity.text];
+    [self checkDatabaseForOutdatedForecastDataForCity:currentCity];
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
-    
 }
 
-- (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName
-{
-    // If there is the City in database, I will not send my Request. I'll use the data from the databese.
-    NSLog(@"I'm here!!!");
-    BOOL isCityInDatabase = NO;
-    BOOL isForecastsForCity = NO;
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
-    NSArray *allCities = [context executeFetchRequest:request error:nil];
-    
-    if (allCities.count)
-    {
-        for (City *myCity in allCities)
-        {
-            if ([myCity.name isEqual:citiesName])
-            {
-                isCityInDatabase = YES;
-                NSLog(@"There is this city with name %@ in database.", citiesName);
-                // проверим, есть ли у этого города какие-либо данные
-                if (myCity.forecasts.count >= MIN_COUNT_FORECAST_IN_DATABASE)
-                {
-                    isForecastsForCity = YES;
-                    NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
-                }
-                break;
-            }
-        }
-    }
-    else
-    {
-         NSLog(@"there is not city =(!!!");
-    }
-    
-    if (!isCityInDatabase)
-    {
-        return NO;
-    }
-    else if (isCityInDatabase && !isForecastsForCity)
-    {
-        return NO;
-    }
-    else //if (isCityInDatabase &&  isForecastsForCity )
-    {
-        return YES;
-    }
-    
-}
-
-- (void) deleteAllCitiesFromDatabase
-{
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
-    NSArray *allCities = [context executeFetchRequest:request error:nil];
-    for (City *myCity in allCities)
-    {
-        [context deleteObject:myCity];
-        [appDelegate saveContext];
-    }
-}
+//-()
 
 
 #pragma mark - Actions. Get data.
@@ -300,7 +224,6 @@
                 NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:NSJSONReadingAllowFragments error:nil];
                 dispatch_async(dispatch_get_main_queue(), ^(){
-                    //[self updateUIWithData:response];
                     DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
                     self.dataModel = myDataModel;
                     if (self.dataModel)
@@ -312,14 +235,6 @@
         }
     }
 }
-
-
-- (void)updateUIWithData:(NSDictionary *)data
-{
-    NSLog(@"data: %@", data);
-}
-
-
 
 #pragma mark - Navigation
 

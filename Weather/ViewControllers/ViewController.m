@@ -21,9 +21,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addSubview:self.requestCity];
-    [self.view addSubview:self.findButton];
-    [self.findButton addTarget:self action:@selector(startSearch) forControlEvents:UIControlEventTouchUpInside];
+    //[self.view addSubview:self.requestCity];
+    //[self.view addSubview:self.findButton];
+    //[self.findButton addTarget:self action:@selector(startSearch) forControlEvents:UIControlEventTouchUpInside];
 }
 
 #pragma mark - Views
@@ -53,7 +53,7 @@
 
 #pragma mark - Actions
 
-- (void)startSearch
+/*- (void)startSearch
 {
     RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"3"];
     NSURL *myRequest = [myRequestManager generatingRequestURL];
@@ -75,14 +75,14 @@
             });
         });
     }
-}
+}*/
 
 #pragma mark - Updata
-
+/*
 - (void)updateUIWithData:(NSDictionary *)data
 {
     NSLog(@"data: %@", data);
 }
-
+*/
 
 @end
