@@ -47,6 +47,27 @@
     
     NSDate *date = [NSDate date];
     self.todayIsDate = date;
+//    NSDictionary *coord = @{@"lon":@"27.5597",
+//                            @"lat":@"53.027401"};
+//    
+//    RequestManager *rm = [[RequestManager alloc] initWithCoordinates:coord forDays:@"3"];
+//    NSURL *myRequest = [rm generatingRequestURLWithCordinates];
+//    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(){
+//        NSData *data = [NSData dataWithContentsOfURL:myRequest];
+//        NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
+//                                                                 options:NSJSONReadingAllowFragments error:nil];
+//        dispatch_sync(dispatch_get_main_queue(), ^(){
+//            DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
+//            NSDictionary *dict = [myDataModel gettingCityInfo];
+//            NSArray *arr = [myDataModel gettingWeatherForecastInfo];
+//            NSLog(@" %@, %@", dict, arr);
+//            NSLog(@"!!!!!!!!!");
+//            
+//        });
+//    });
+    
+    
     
     [self configureForUserInterfase];
     
@@ -297,6 +318,10 @@
 {
     self.title = [self gettingStringWithDate:self.todayIsDate];
     self.currentCity = [self gettingLastCityObjectFromDatabase];
+    //NSLog(@"%@", self.currentCity.name);
+    //BOOL isDataInDatabase;
+    //SavingAndGettingData *helper = [[SavingAndGettingData alloc] initWithCity:self.currentCity];
+    //isDataInDatabase = [helper checkTheDatabaseForCity:self.currentCity];
     [self checkDatabaseForOutdatedForecastDataForCity:self.currentCity];
     self.forecastsForUI = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
 }

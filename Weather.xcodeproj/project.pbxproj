@@ -26,6 +26,7 @@
 		848E330E1B0383E7000D7A23 /* WeatherForecastTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 848E330D1B0383E7000D7A23 /* WeatherForecastTableViewCell.m */; };
 		848E33111B038C5F000D7A23 /* CityInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 848E33101B038C5F000D7A23 /* CityInfoTableViewCell.m */; };
 		848E33141B03CD2D000D7A23 /* DetailWeatherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 848E33131B03CD2D000D7A23 /* DetailWeatherViewController.m */; };
+		849AA1D41B0A5B3B00F8A097 /* SavingAndGettingData.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AA1D31B0A5B3B00F8A097 /* SavingAndGettingData.m */; };
 		84D35C3C1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D35C3B1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,8 @@
 		848E33101B038C5F000D7A23 /* CityInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CityInfoTableViewCell.m; path = Views/CityInfoTableViewCell.m; sourceTree = "<group>"; };
 		848E33121B03CD2D000D7A23 /* DetailWeatherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetailWeatherViewController.h; path = ViewControllers/DetailWeatherViewController.h; sourceTree = "<group>"; };
 		848E33131B03CD2D000D7A23 /* DetailWeatherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DetailWeatherViewController.m; path = ViewControllers/DetailWeatherViewController.m; sourceTree = "<group>"; };
+		849AA1D21B0A5B3B00F8A097 /* SavingAndGettingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SavingAndGettingData.h; path = Helpers/SavingAndGettingData.h; sourceTree = "<group>"; };
+		849AA1D31B0A5B3B00F8A097 /* SavingAndGettingData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SavingAndGettingData.m; path = Helpers/SavingAndGettingData.m; sourceTree = "<group>"; };
 		84D35C3A1B063CB900570AF9 /* MainViewController+WorkWithDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MainViewController+WorkWithDatabase.h"; path = "Helpers/MainViewController+WorkWithDatabase.h"; sourceTree = "<group>"; };
 		84D35C3B1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MainViewController+WorkWithDatabase.m"; path = "Helpers/MainViewController+WorkWithDatabase.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -220,6 +223,8 @@
 			children = (
 				84D35C3A1B063CB900570AF9 /* MainViewController+WorkWithDatabase.h */,
 				84D35C3B1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m */,
+				849AA1D21B0A5B3B00F8A097 /* SavingAndGettingData.h */,
+				849AA1D31B0A5B3B00F8A097 /* SavingAndGettingData.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				84D35C3C1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m in Sources */,
 				848E33011B037519000D7A23 /* MainViewController.m in Sources */,
 				848E33111B038C5F000D7A23 /* CityInfoTableViewCell.m in Sources */,
+				849AA1D41B0A5B3B00F8A097 /* SavingAndGettingData.m in Sources */,
 				848E33081B037990000D7A23 /* requestTableViewCell.m in Sources */,
 				848E330E1B0383E7000D7A23 /* WeatherForecastTableViewCell.m in Sources */,
 				8438DC9D1B04DA0200FE6F5C /* City+Creating.m in Sources */,

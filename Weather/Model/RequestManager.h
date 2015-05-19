@@ -13,16 +13,25 @@
 #define WEATHER_API_KEY_VALUE @"cea4a70a4bf1d91f0c4e71191e145657"
 #define TYPE_OF_REQUEST @"forecast/daily"
 
-//http://api.openweathermap.org/data/2.5/forecast/daily?q=Minsk&cnt=5&APPID=cea4a70a4bf1d91f0c4e71191e145657&units=metric - примерный запрос
+// пример...
+// http://api.openweathermap.org/data/2.5/forecast/daily?q=Minsk&cnt=5&APPID=cea4a70a4bf1d91f0c4e71191e145657&units=metric
 
-//http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&q=Minsk&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657 - точный запрос
+// запрос по имени города
+// http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&q=Minsk&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657 
+
+// запрос по координатам
+// http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657&lon=27.566668&lat=53.9
+
 
 @interface RequestManager : NSObject
 
 @property (strong, nonatomic) NSString *keyParamForSearch;
 @property (strong, nonatomic) NSString *countOfDays;
+@property (nonatomic) NSDictionary *coordinates;
 
 - (instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days;
+- (instancetype)initWithCoordinates:(NSDictionary *)coordinates forDays:(NSString *)days;
 - (NSURL *)generatingRequestURL;
+- (NSURL *)generatingRequestURLWithCordinates;
 
 @end

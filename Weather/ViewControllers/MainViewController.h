@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "CityInfoTableViewCell.h"
-//#import "requestTableViewCell.h"
 #import "WeatherTodayTableViewCell.h"
 #import "WeatherForecastTableViewCell.h"
 #import "RequestManager.h"
@@ -16,6 +15,7 @@
 #import "DetailWeatherViewController.h"
 #import "AppDelegate.h"
 #import "MainViewController+WorkWithDatabase.h"
+#import "SavingAndGettingData.h"
 
 @interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 

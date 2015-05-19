@@ -14,5 +14,4 @@
 @property (nonatomic) UILabel *temperature;
 @property (nonatomic) UIView *weatherStatus;
 
-
 @end

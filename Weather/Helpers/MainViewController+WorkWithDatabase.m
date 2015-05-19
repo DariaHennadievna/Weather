@@ -14,6 +14,7 @@
 {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
     NSArray *allCities = [context executeFetchRequest:request error:nil];
     for (City *myCity in allCities)
@@ -21,12 +22,19 @@
         [context deleteObject:myCity];
         [appDelegate saveContext];
     }
+    NSFetchRequest *requestForecasts = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([Forecast class])];
+    NSArray *allForecasts = [context executeFetchRequest:requestForecasts error:nil];
+    for (Forecast *myForecast in allForecasts)
+    {
+        [context deleteObject:myForecast];
+        [appDelegate saveContext];
+    }
 }
 
 
 - (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName
 {
-    // If there is the City in database, I will not send my Request. I'll use the data from the databese.
+    // If there is the City in database, I will not send my Request. I'll use the data from the database.
     NSLog(@"I'm here!!!");
     BOOL isCityInDatabase = NO;
     BOOL isForecastsForCity = NO;
@@ -39,12 +47,12 @@
     {
         for (City *myCity in allCities)
         {
-            if ([myCity.name isEqual:citiesName])
+            if ([myCity.name isEqualToString:citiesName])
             {
                 isCityInDatabase = YES;
                 NSLog(@"There is this city with name %@ in database.", citiesName);
                 // проверим, есть ли у этого города какие-либо данные
-                if (myCity.forecasts.count >= MIN_COUNT_FORECAST_IN_DATABASE)
+                if (myCity.forecasts.count > MIN_COUNT_FORECAST_IN_DATABASE)
                 {
                     isForecastsForCity = YES;
                     NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
@@ -72,23 +80,25 @@
     }
 }
 
+
 - (void)checkDatabaseForOutdatedForecastDataForCity:(City *)myCity
 {
     NSLog(@"Собираюсь проверить БД на наличие старых прогнозов");
-    //NSSet *someForecasts = myCity.forecasts;
-    NSMutableSet * trash;
+    
+    NSArray *cities = [[NSArray alloc] init];
+    cities = [myCity.forecasts copy];
     int const diff = -86400;
+    
     if (myCity.forecasts.count)
     {
-        for (Forecast *myForecast in myCity.forecasts)
+        for (Forecast *myForecast in cities)
         {
-            //[arr addObject:myForecast];
-            for (int i = 0; i < myCity.forecasts.count; i++)
+            for (int i = 0; i < cities.count; i++)
             {
-                NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(diff * (i+1)+10800)];
+                NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(diff * (i+1))];
                 NSLog(@">%@", date);
                 
-                NSString *dateComponents = @"dd MMMM";
+                NSString *dateComponents = @"MMMM dd";
                 NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents
                                                                        options:0 locale:[NSLocale systemLocale]];
                 NSDateFormatter *dateFormatter = [NSDateFormatter new];
@@ -106,36 +116,21 @@
                 if ([myForecastDate isEqualToString:myDate])
                 {
                     NSLog(@"Дата устарела. Удалить ее!!!");
-                   // NSLog(@"Было столько прогнозов %lu", myCity.forecasts.count);
-                    /*AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                    NSLog(@"Было столько прогнозов %lu", myCity.forecasts.count);
+                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     NSManagedObjectContext *context = appDelegate.managedObjectContext;
                     [myCity removeForecastsObject:myForecast];
                     [context deleteObject:myForecast];
-                    [appDelegate saveContext];*/
-                    [trash addObject:myForecast];
-                   // NSLog(@"После удаления стало вот столько %lu", myCity.forecasts.count);
-                    
+                    [appDelegate saveContext];
+                    NSLog(@"После удаления стало вот столько %lu", myCity.forecasts.count);
                 }
                 else
                 {
-                    NSLog(@"Нет такой даты. Все ОК!!!");
+                    NSLog(@"Нет такой даты в БД. Все ОК!!!");
                 }
             }
         }
     }
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    if (trash.count)
-    {
-        [myCity removeForecasts:[trash copy]];
-        NSLog(@"%@", trash);
-        for (Forecast * myForecast in trash)
-        {
-            [context deleteObject:myForecast];
-            [appDelegate saveContext];
-        }
-    }
-    
 }
 
 
@@ -165,11 +160,13 @@
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
     NSArray *allCities = [context executeFetchRequest:request error:nil];
+    NSLog(@"%lu", allCities.count);
     if (!allCities.count)
     {
         return nil;
     }
-    myCity = [allCities lastObject];    
+    myCity = [allCities lastObject];
+    //NSLog(@"%@", myCity.name);
     return myCity;
 }
 

@@ -21,6 +21,40 @@
     return self;
 }
 
+- (instancetype)initWithCoordinates:(NSDictionary *)coordinates forDays:(NSString *)days
+{
+    self = [super init];
+    if (self)
+    {
+        _coordinates = coordinates;
+        _countOfDays = days;
+    }
+    return self;
+}
+
+-(NSURL *)generatingRequestURLWithCordinates
+{
+    NSDictionary *keyParams = self.coordinates;
+    NSMutableString *requestURL = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
+    [requestURL appendString:@"?"];
+    
+    NSMutableDictionary *temp = [keyParams mutableCopy];
+    [temp addEntriesFromDictionary:self.additionalParams];
+    keyParams = temp;
+    
+    NSMutableArray *keyValues = [[NSMutableArray alloc] init];
+    for (NSString *key in keyParams)
+    {
+        id value = [keyParams objectForKey:key];
+        NSString *keyValue = [NSString stringWithFormat:@"%@=%@", key, value];
+        [keyValues addObject:keyValue];
+    }
+    [requestURL appendString:[keyValues componentsJoinedByString:@"&"]];
+    
+    NSLog(@"requestURL: %@", requestURL);
+    return [NSURL URLWithString:requestURL];
+}
+
 - (NSURL *)generatingRequestURL
 {
     if (!self.keyParamForSearch.length)
