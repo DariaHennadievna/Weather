@@ -32,6 +32,32 @@
     return self;
 }
 
+/*- (void)callMethodWithParams:(NSDictionary *)params
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:@"http://api.openweathermap.org/data/2.5/forecast/daily?" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         NSLog(@"JSON: %@", responseObject);
+     }
+         failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"Error: %@", error);
+     }];
+    
+}*/
+
+-(NSDictionary *)gettingParamWithCoordinates
+{
+    NSDictionary *keyParams = self.coordinates;
+    NSMutableDictionary *temp = [keyParams mutableCopy];
+    [temp addEntriesFromDictionary:self.additionalParams];
+    keyParams = temp;
+    return keyParams;
+}
+
+
+
+
 -(NSURL *)generatingRequestURLWithCordinates
 {
     NSDictionary *keyParams = self.coordinates;
