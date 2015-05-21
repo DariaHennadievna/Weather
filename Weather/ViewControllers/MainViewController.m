@@ -7,23 +7,23 @@
 //
 
 #import "MainViewController.h"
-//#define MIN_COUNT_FORECAST_IN_DATABASE 6
 
 @interface MainViewController ()
 
 @property (nonatomic) UITextField *requestCity;
 @property (nonatomic) UIButton *findButton;
-
 @property (nonatomic)  UITableView *tableView;
-@property (nonatomic) NSString *nameForDestinationVC;
 
+@property (nonatomic) NSString *nameForDestinationVC;
 @property (nonatomic) DataModel *dataModel;
 @property (nonatomic) NSDate *todayIsDate;
-
 @property (nonatomic) City *currentCity;
 @property (strong, nonatomic) NSArray *forecastsForUI;
 @property (nonatomic) Forecast *currentForecast;
+
 @property (strong, nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) NSString *currentLatitude;
+@property (nonatomic) NSString *currentLongitude;
 
 @end
 
@@ -50,87 +50,10 @@
     self.todayIsDate = date;
     [self startGetLocation];
     
-    //NSDictionary *parametrs = [];
-    
-    
-//    NSDictionary *coord = @{@"lon":@"27.5597",
-//                            @"lat":@"53.027401"};
-//    
-//    RequestManager *rm = [[RequestManager alloc] initWithCoordinates:coord forDays:@"3"];
-//    NSURL *myRequest = [rm generatingRequestURLWithCordinates];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(){
-//        NSData *data = [NSData dataWithContentsOfURL:myRequest];
-//        NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
-//                                                                 options:NSJSONReadingAllowFragments error:nil];
-//        dispatch_sync(dispatch_get_main_queue(), ^(){
-//            DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
-//            NSDictionary *dict = [myDataModel gettingCityInfo];
-//            NSArray *arr = [myDataModel gettingWeatherForecastInfo];
-//            NSLog(@" %@, %@", dict, arr);
-//            NSLog(@"!!!!!!!!!");
-//            
-//        });
-//    });
-    
-    
-    
-    [self configureForUserInterfase];
-    
-    
-    // if I wish, I can delete all cities from the database
+    // if I want, I can delete all cities and forecasts for them from the database...
     //[self deleteAllCitiesFromDatabase];
-    
 }
 
--(void)startGetLocation
-{
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
-    //[self.locationManager requestWhenInUseAuthorization];
-    [self.locationManager requestAlwaysAuthorization];
-    
-    // authorizationStatus = kCLAuthorizationStatusNotDetermined...
-    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
-        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse)
-    {
-        [self.locationManager startUpdatingLocation];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    NSLog(@"I'm here!!!");
-    CLLocation *location = [locations lastObject];
-    if(locations.count)
-    {
-        [self.locationManager stopUpdatingLocation];
-    }
-    NSLog(@"location: lat = %f, lon = %f", location.coordinate.latitude, location.coordinate.longitude);
-    NSString *coordinateLon = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
-    NSString *coordinateLat = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
-    NSDictionary *coordinates = @{@"lon":coordinateLon,
-                                  @"lat":coordinateLat};
-    
-    RequestManager *requestManager = [[RequestManager alloc] initWithCoordinates:coordinates forDays:@"10"];
-    [requestManager callMethodWithCallback:^(NSError *error, NSDictionary *result) {
-        if (error)
-        {   // Handle the error
-            return;
-        }
-        
-        DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:result];
-        self.dataModel = myDataModel;
-        if (self.dataModel)
-        {
-            [self dataProcessing];
-        }
-    }];
-    
-    
-    
-}
 
 #pragma mark - Views
 
@@ -169,8 +92,67 @@
 }
 
 
-#pragma mark - Table View Data Source
+#pragma mark - Core Location
 
+-(void)startGetLocation
+{
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
+    [self.locationManager requestAlwaysAuthorization];
+    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse)
+    {
+        [self.locationManager startUpdatingLocation]; // --->
+    }
+}
+
+#pragma mark - Core Location Delegate
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    CLLocation *location = [locations lastObject];
+    if(locations.count)
+    {
+        [self.locationManager stopUpdatingLocation];
+    }
+    NSLog(@"location: lat = %f, lon = %f", location.coordinate.latitude, location.coordinate.longitude);
+    self.currentLongitude = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
+    self.currentLatitude  = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
+    
+    BOOL isDataInDatabase = [self checkTheDatabaseForCoordinatesLatitude:self.currentLatitude
+                                                            andLongitude:self.currentLongitude];
+    
+    if (isDataInDatabase)
+    {
+        NSLog(@"There is the city with coordinates in Database");
+        [self loadDataFromDatabaseForFirstCall];
+        return;
+    }
+    else
+    {
+        NSLog(@"НЕТУ города такого. ");
+        NSDictionary *coordinates = @{@"lon":self.currentLongitude ,
+                                      @"lat":self.currentLatitude};
+        RequestManager *requestManager = [[RequestManager alloc] initWithCoordinates:coordinates forDays:@"10"];
+        [requestManager currentWeatherByCoordinatesWithCallback:^(NSError *error, NSDictionary *result) {
+            if (error)
+            {
+                return;
+            }
+            DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:result];
+            self.dataModel = myDataModel;
+            if (self.dataModel)
+            {
+                [self savingDataInDatabaseForFirstCall];
+                [self loadDataFromDatabaseForFirstCall];
+                [self.tableView reloadData];
+            }
+        }];
+    }
+}
+
+
+#pragma mark - Table View Data Source
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -345,7 +327,7 @@
 - (void)dataProcessing
 {
     NSDictionary *newCityData = [self.dataModel gettingCityInfo];
-    NSLog(@"new city info %@", newCityData);
+    //NSLog(@"new city info %@", newCityData);
     [self.dataModel savingCityData:newCityData];
     
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
@@ -369,16 +351,27 @@
 
 }
 
-- (void)configureForUserInterfase
+- (void)savingDataInDatabaseForFirstCall
 {
-    self.title = [self gettingStringWithDate:self.todayIsDate];
-    self.currentCity = [self gettingLastCityObjectFromDatabase];
-    //NSLog(@"%@", self.currentCity.name);
-    //BOOL isDataInDatabase;
-    //SavingAndGettingData *helper = [[SavingAndGettingData alloc] initWithCity:self.currentCity];
-    //isDataInDatabase = [helper checkTheDatabaseForCity:self.currentCity];
+    NSDictionary *newCityData = [self.dataModel gettingCityInfo];
+    [self.dataModel savingCityData:newCityData];
+    NSString *nameOfCity = [newCityData objectForKey:CITY_NAME];
+    
+    NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
+    City *currentCity = [self gettingCityWithName:nameOfCity];
+    [self checkDatabaseForOutdatedForecastDataForCity:currentCity];
+    [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
+}
+
+- (void)loadDataFromDatabaseForFirstCall
+{
+    City *myCurrentCity = [self gettingCityWithCoordinatesLatitude:self.currentLatitude
+                                                      andLongitude:self.currentLongitude];
+    self.currentCity = myCurrentCity;
     [self checkDatabaseForOutdatedForecastDataForCity:self.currentCity];
-    self.forecastsForUI = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
+    NSArray *myForecasts = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
+    self.forecastsForUI = myForecasts;
+    [self.tableView reloadData];
 }
 
 
@@ -439,7 +432,20 @@
     else
     {
         RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"10"];
-        NSURL *myRequest = [myRequestManager generatingRequestURL];
+        [myRequestManager currentWeatherByCityNameWithCallback:^(NSError *error, NSDictionary *result) {
+            if (error)
+            {
+                return;
+            }
+            DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:result];
+            self.dataModel = myDataModel;
+            if (self.dataModel)
+            {
+                [self dataProcessing];
+            }
+        }];
+        
+        /*NSURL *myRequest = [myRequestManager generatingRequestURL];
         NSLog(@"myRequest: %@", myRequest);
         if (myRequest)
         {
@@ -457,7 +463,7 @@
                     }
                 });
             });
-        }
+        }*/
     }
 }
 

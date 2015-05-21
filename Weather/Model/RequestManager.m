@@ -33,14 +33,15 @@
     return self;
 }
 
-- (void)callMethodWithCallback:(WeatherAPICallback)callback;
+//- (void)callMethodWithCallback:(WeatherAPICallback)callback;
+- (void)callMethodWithParam:(NSDictionary *)parameters andCallback:(WeatherAPICallback)callback;
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSMutableString *request = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
     [request appendString:@"?"];
-    NSDictionary *parametrs = [self gettingParamWithCoordinates];
+    //NSDictionary *parameters = [self gettingParamWithCoordinates];
     
-    [manager GET:[request copy] parameters:parametrs success:^(AFHTTPRequestOperation *operation, id responseObject)
+    [manager GET:[request copy] parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
          NSLog(@"JSON: %@", responseObject);
          callback(nil, responseObject);
@@ -50,8 +51,20 @@
      {
          NSLog(@"Error: %@", error);
      }];
-    
 }
+
+- (void)currentWeatherByCoordinatesWithCallback:(void (^)(NSError *error, NSDictionary *result))callback
+{
+    NSDictionary *parameters = [self gettingParamWithCoordinates];
+    [self callMethodWithParam:parameters andCallback:callback];
+}
+
+- (void)currentWeatherByCityNameWithCallback:(void (^)(NSError *error, NSDictionary *result))callback
+{
+    NSDictionary *parameters = [self gettingParamWithNameOfCity];
+    [self callMethodWithParam:parameters andCallback:callback];
+}
+
 
 -(NSDictionary *)gettingParamWithCoordinates
 {
@@ -64,7 +77,16 @@
     return keyParams;
 }
 
-
+-(NSDictionary *)gettingParamWithNameOfCity
+{
+    NSDictionary *keyParams = @{@"q":self.keyParamForSearch};
+    NSDictionary *cntParam = @{@"cnt":self.countOfDays};
+    NSMutableDictionary *temp = [keyParams mutableCopy];
+    [temp addEntriesFromDictionary:self.additionalParams];
+    [temp addEntriesFromDictionary:cntParam];
+    keyParams = temp;
+    return keyParams;
+}
 
 
 -(NSURL *)generatingRequestURLWithCordinates

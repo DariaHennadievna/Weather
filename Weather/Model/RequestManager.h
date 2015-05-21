@@ -36,6 +36,9 @@ typedef void (^WeatherAPICallback)(NSError* error, NSDictionary *result);
 - (NSURL *)generatingRequestURL;
 - (NSURL *)generatingRequestURLWithCordinates;
 
-- (void)callMethodWithCallback:(WeatherAPICallback)callback;
+// methods for AFNetworking
+- (void)callMethodWithParam:(NSDictionary *)parameters andCallback:(WeatherAPICallback)callback;
+- (void)currentWeatherByCoordinatesWithCallback:(void (^)(NSError *error, NSDictionary *result))callback;
+- (void)currentWeatherByCityNameWithCallback:(void (^)(NSError *error, NSDictionary *result))callback;
 
 @end

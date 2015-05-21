@@ -52,7 +52,7 @@
     NSMutableDictionary *cityInfo = [[NSMutableDictionary alloc] init];
     for (id key in cityData)
     {
-        NSLog(@"key = %@", key);
+        //NSLog(@"key = %@", key);
         if ([key isEqualToString:@"country"] || [key isEqualToString:@"id"] || [key isEqualToString:@"name"])
         {
             id value = [cityData objectForKey:key];
@@ -68,7 +68,7 @@
             }
         }
     }
-    NSLog(@"city info = %@", cityInfo);
+    //NSLog(@"city info = %@", cityInfo);
     return [cityInfo copy];
 }
 
@@ -109,7 +109,7 @@
         NSDictionary *forecastForOneDay = [self forDayWeatherInfo:[object mutableCopy]];
         [forecastDaily addObject:forecastForOneDay];
     }
-    NSLog(@"forecastDaily = %@", forecastDaily);
+    //NSLog(@"forecastDaily = %@", forecastDaily);
     return [forecastDaily copy];
 }
 
@@ -135,28 +135,23 @@
         NSLog(@"Count of city %lu", allCities.count);
         for (City *myCity in allCities)
         {
-            NSLog(@"myCity.cityID is %@", myCity.cityID);
+            //NSLog(@"myCity.cityID is %@", myCity.cityID);
             if ([myCity.cityID isEqualToString:cityID])
             {
                 isCityInDatabase = YES;
                 NSLog(@"This city there is in Database");
-                /*if (myCity.forecasts.count < MIN_COUNT_FORECAST_IN_DATABASE)
-                {
-                    NSLog(@"Count of forecasts < MIN_COUNT_FORECAST_IN_DATABASE");
-                    [self savingForecastData:<#(NSArray *)#> forCity:<#(City *)#>]
-                }*/
                 break;
             }
         }
         if (!isCityInDatabase)
         {
             NSLog(@"This city there is not in Database");
-            NSLog(@"We will save its");
+            NSLog(@"We will save its...");
             [City cityWithData:data];
         }
         else
         {
-            NSLog(@"We will not save its");
+            NSLog(@"We will not save its...");
             isCityInDatabase = NO;
         }
         
@@ -188,6 +183,7 @@
     }
 }
 
+
 - (NSMutableArray *)gettingForecastsForCity:(City *)city
 {
     NSMutableArray *allForecasts = [[NSMutableArray alloc] init];
@@ -195,17 +191,17 @@
     {
         [allForecasts addObject:myForecast];
     }
-    
     return allForecasts;
 }
+
 
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city
 {
     BOOL isForecastInDatabase = NO;
     for (NSDictionary *dataForDay in data)
     {
-        NSLog(@"Я внутри массива data");
-        NSLog(@"Количество прогнозов для этого города сшставляет %lu штук", city.forecasts.count);
+        //NSLog(@"Я внутри массива data");
+        //NSLog(@"Количество прогнозов для этого города сшставляет %lu штук", city.forecasts.count);
         if (city.forecasts.count)
         {
             NSLog(@"Count of city.forecasts is %lu", city.forecasts.count);
@@ -250,7 +246,7 @@
 
             Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay forCity:city];
             [city addForecastsObject:newForecast];
-            NSLog(@"Количество прогнозов %lu ", city.forecasts.count);
+            //NSLog(@"Количество прогнозов %lu ", city.forecasts.count);
             
             NSError *error = nil;
             if (![context save:&error])

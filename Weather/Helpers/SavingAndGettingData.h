@@ -25,9 +25,12 @@
 
 - (City *)gettingCityWithName:(NSString *)name;
 - (City *)gettingLastCityObjectFromDatabase;
+- (City *)gettingCityWithCoordinatesLatitude:(NSString *)lat andLongitude:(NSString *)lon;
+
 - (void)deleteAllCitiesFromDatabase;
 - (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity;
 
 - (BOOL)checkTheDatabaseForCity:(City *)city;
+- (BOOL)checkTheDatabaseForCoordinatesLatitude:(NSString *)lat andLongitude:(NSString *)lon;
 
 @end
