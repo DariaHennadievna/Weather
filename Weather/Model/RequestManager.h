@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DataModel.h"
 
 #define WEATHER_BASE_URL @"http://api.openweathermap.org/data/2.5/"
 #define WEATHER_API_KEY_NAME @"APPID"
@@ -22,6 +23,7 @@
 // запрос по координатам
 // http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657&lon=27.566668&lat=53.9
 
+typedef void (^WeatherAPICallback)(NSError* error, NSDictionary *result);
 
 @interface RequestManager : NSObject
 
@@ -33,5 +35,7 @@
 - (instancetype)initWithCoordinates:(NSDictionary *)coordinates forDays:(NSString *)days;
 - (NSURL *)generatingRequestURL;
 - (NSURL *)generatingRequestURLWithCordinates;
+
+- (void)callMethodWithCallback:(WeatherAPICallback)callback;
 
 @end

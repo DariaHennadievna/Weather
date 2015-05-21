@@ -7,6 +7,7 @@
 //
 
 #import "RequestManager.h"
+#import <AFNetworking/AFNetworking.h>
 
 @implementation RequestManager
 
@@ -32,25 +33,33 @@
     return self;
 }
 
-/*- (void)callMethodWithParams:(NSDictionary *)params
+- (void)callMethodWithCallback:(WeatherAPICallback)callback;
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:@"http://api.openweathermap.org/data/2.5/forecast/daily?" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject)
+    NSMutableString *request = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
+    [request appendString:@"?"];
+    NSDictionary *parametrs = [self gettingParamWithCoordinates];
+    
+    [manager GET:[request copy] parameters:parametrs success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
          NSLog(@"JSON: %@", responseObject);
+         callback(nil, responseObject);
+    
      }
          failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
          NSLog(@"Error: %@", error);
      }];
     
-}*/
+}
 
 -(NSDictionary *)gettingParamWithCoordinates
 {
     NSDictionary *keyParams = self.coordinates;
+    NSDictionary *cntParam = @{@"cnt":self.countOfDays};
     NSMutableDictionary *temp = [keyParams mutableCopy];
     [temp addEntriesFromDictionary:self.additionalParams];
+    [temp addEntriesFromDictionary:cntParam];
     keyParams = temp;
     return keyParams;
 }

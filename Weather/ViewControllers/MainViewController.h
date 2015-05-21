@@ -16,7 +16,13 @@
 #import "AppDelegate.h"
 #import "MainViewController+WorkWithDatabase.h"
 #import "SavingAndGettingData.h"
+#import <CoreLocation/CoreLocation.h>
+#import <CoreLocation/CLLocationManager.h>
+#import <CoreLocation/CLLocationManagerDelegate.h>
 
-@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@interface MainViewController : UIViewController <UITableViewDataSource,
+                                                    UITableViewDelegate,
+                                                    CLLocationManagerDelegate>
 
 @end

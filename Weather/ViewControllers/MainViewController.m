@@ -23,6 +23,7 @@
 @property (nonatomic) City *currentCity;
 @property (strong, nonatomic) NSArray *forecastsForUI;
 @property (nonatomic) Forecast *currentForecast;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 
 @end
 
@@ -47,6 +48,11 @@
     
     NSDate *date = [NSDate date];
     self.todayIsDate = date;
+    [self startGetLocation];
+    
+    //NSDictionary *parametrs = [];
+    
+    
 //    NSDictionary *coord = @{@"lon":@"27.5597",
 //                            @"lat":@"53.027401"};
 //    
@@ -77,6 +83,54 @@
     
 }
 
+-(void)startGetLocation
+{
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
+    //[self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
+    
+    // authorizationStatus = kCLAuthorizationStatusNotDetermined...
+    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse)
+    {
+        [self.locationManager startUpdatingLocation];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    NSLog(@"I'm here!!!");
+    CLLocation *location = [locations lastObject];
+    if(locations.count)
+    {
+        [self.locationManager stopUpdatingLocation];
+    }
+    NSLog(@"location: lat = %f, lon = %f", location.coordinate.latitude, location.coordinate.longitude);
+    NSString *coordinateLon = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
+    NSString *coordinateLat = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
+    NSDictionary *coordinates = @{@"lon":coordinateLon,
+                                  @"lat":coordinateLat};
+    
+    RequestManager *requestManager = [[RequestManager alloc] initWithCoordinates:coordinates forDays:@"10"];
+    [requestManager callMethodWithCallback:^(NSError *error, NSDictionary *result) {
+        if (error)
+        {   // Handle the error
+            return;
+        }
+        
+        DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:result];
+        self.dataModel = myDataModel;
+        if (self.dataModel)
+        {
+            [self dataProcessing];
+        }
+    }];
+    
+    
+    
+}
 
 #pragma mark - Views
 
@@ -291,6 +345,7 @@
 - (void)dataProcessing
 {
     NSDictionary *newCityData = [self.dataModel gettingCityInfo];
+    NSLog(@"new city info %@", newCityData);
     [self.dataModel savingCityData:newCityData];
     
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
