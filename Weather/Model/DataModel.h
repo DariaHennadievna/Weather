@@ -13,13 +13,17 @@
 
 @interface DataModel : NSObject
 
-@property (strong, nonatomic) NSDictionary *data;
+@property (nonatomic) NSDictionary *data;
+@property (nonatomic) AppDelegate *appDelegate;
 
+// Init Methods
 - (instancetype)initWithWeatherData:(NSDictionary *)weatherData;
+
+// Get Methods
 - (NSDictionary *)gettingCityInfo;
 - (NSArray *)gettingWeatherForecastInfo;
 
-#pragma mark - Core Data
+// Save Methods
 - (void)savingCityData:(NSDictionary *)data;
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city;
 

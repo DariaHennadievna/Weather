@@ -9,7 +9,17 @@
 #import "RequestManager.h"
 #import <AFNetworking/AFNetworking.h>
 
+
+// запрос по имени города
+// http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&q=Minsk&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657
+
+// запрос по координатам
+// http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657&lon=27.566668&lat=53.9
+
+
 @implementation RequestManager
+
+#pragma mark - Init Methods
 
 - (instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days
 {
@@ -19,6 +29,7 @@
         _keyParamForSearch = nameOfCity;
         _countOfDays = days;
     }
+    
     return self;
 }
 
@@ -30,27 +41,27 @@
         _coordinates = coordinates;
         _countOfDays = days;
     }
+    
     return self;
 }
 
-//- (void)callMethodWithCallback:(WeatherAPICallback)callback;
+
+#pragma mark - AFNetworking Request Methods
+
 - (void)callMethodWithParam:(NSDictionary *)parameters andCallback:(WeatherAPICallback)callback;
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSMutableString *request = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
     [request appendString:@"?"];
-    //NSDictionary *parameters = [self gettingParamWithCoordinates];
     
-    [manager GET:[request copy] parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
-         NSLog(@"JSON: %@", responseObject);
-         callback(nil, responseObject);
-    
-     }
-         failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         NSLog(@"Error: %@", error);
-     }];
+    [manager GET:[request copy] parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+         //NSLog(@"JSON: %@", responseObject);
+        callback(nil, responseObject);
+    }
+    failure:^(AFHTTPRequestOperation *operation, NSError *error)
+    {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 - (void)currentWeatherByCoordinatesWithCallback:(void (^)(NSError *error, NSDictionary *result))callback
@@ -66,28 +77,7 @@
 }
 
 
--(NSDictionary *)gettingParamWithCoordinates
-{
-    NSDictionary *keyParams = self.coordinates;
-    NSDictionary *cntParam = @{@"cnt":self.countOfDays};
-    NSMutableDictionary *temp = [keyParams mutableCopy];
-    [temp addEntriesFromDictionary:self.additionalParams];
-    [temp addEntriesFromDictionary:cntParam];
-    keyParams = temp;
-    return keyParams;
-}
-
--(NSDictionary *)gettingParamWithNameOfCity
-{
-    NSDictionary *keyParams = @{@"q":self.keyParamForSearch};
-    NSDictionary *cntParam = @{@"cnt":self.countOfDays};
-    NSMutableDictionary *temp = [keyParams mutableCopy];
-    [temp addEntriesFromDictionary:self.additionalParams];
-    [temp addEntriesFromDictionary:cntParam];
-    keyParams = temp;
-    return keyParams;
-}
-
+#pragma mark - NSURL Request Methods
 
 -(NSURL *)generatingRequestURLWithCordinates
 {
@@ -143,8 +133,33 @@
     }
     [requestURL appendString:[keyValues componentsJoinedByString:@"&"]];
     
-    NSLog(@"requestURL: %@", requestURL);
+    //NSLog(@"requestURL: %@", requestURL);
     return [NSURL URLWithString:requestURL];
+}
+
+
+#pragma mark - Helper Methods
+
+-(NSDictionary *)gettingParamWithCoordinates
+{
+    NSDictionary *keyParams = self.coordinates;
+    NSDictionary *cntParam = @{@"cnt":self.countOfDays};
+    NSMutableDictionary *temp = [keyParams mutableCopy];
+    [temp addEntriesFromDictionary:self.additionalParams];
+    [temp addEntriesFromDictionary:cntParam];
+    keyParams = temp;
+    return keyParams;
+}
+
+-(NSDictionary *)gettingParamWithNameOfCity
+{
+    NSDictionary *keyParams = @{@"q":self.keyParamForSearch};
+    NSDictionary *cntParam = @{@"cnt":self.countOfDays};
+    NSMutableDictionary *temp = [keyParams mutableCopy];
+    [temp addEntriesFromDictionary:self.additionalParams];
+    [temp addEntriesFromDictionary:cntParam];
+    keyParams = temp;
+    return keyParams;
 }
 
 - (NSDictionary *)additionalParams

@@ -14,14 +14,6 @@
 #define WEATHER_API_KEY_VALUE @"cea4a70a4bf1d91f0c4e71191e145657"
 #define TYPE_OF_REQUEST @"forecast/daily"
 
-// пример...
-// http://api.openweathermap.org/data/2.5/forecast/daily?q=Minsk&cnt=5&APPID=cea4a70a4bf1d91f0c4e71191e145657&units=metric
-
-// запрос по имени города
-// http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&q=Minsk&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657 
-
-// запрос по координатам
-// http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=en&cnt=3&APPID=cea4a70a4bf1d91f0c4e71191e145657&lon=27.566668&lat=53.9
 
 typedef void (^WeatherAPICallback)(NSError* error, NSDictionary *result);
 
@@ -31,12 +23,15 @@ typedef void (^WeatherAPICallback)(NSError* error, NSDictionary *result);
 @property (strong, nonatomic) NSString *countOfDays;
 @property (nonatomic) NSDictionary *coordinates;
 
+// Init Methods
 - (instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days;
 - (instancetype)initWithCoordinates:(NSDictionary *)coordinates forDays:(NSString *)days;
+
+// NSURL Request Methods
 - (NSURL *)generatingRequestURL;
 - (NSURL *)generatingRequestURLWithCordinates;
 
-// methods for AFNetworking
+// AFNetworking Request Methods
 - (void)callMethodWithParam:(NSDictionary *)parameters andCallback:(WeatherAPICallback)callback;
 - (void)currentWeatherByCoordinatesWithCallback:(void (^)(NSError *error, NSDictionary *result))callback;
 - (void)currentWeatherByCityNameWithCallback:(void (^)(NSError *error, NSDictionary *result))callback;

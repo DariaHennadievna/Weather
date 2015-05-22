@@ -11,17 +11,16 @@
 @interface MainViewController ()
 
 @property (nonatomic) UITextField *requestCity;
-@property (nonatomic) UIButton *findButton;
 @property (nonatomic)  UITableView *tableView;
 
 @property (nonatomic) NSString *nameForDestinationVC;
 @property (nonatomic) DataModel *dataModel;
 @property (nonatomic) NSDate *todayIsDate;
 @property (nonatomic) City *currentCity;
-@property (strong, nonatomic) NSArray *forecastsForUI;
+@property (nonatomic) NSArray *forecastsForUI;
 @property (nonatomic) Forecast *currentForecast;
 
-@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSString *currentLatitude;
 @property (nonatomic) NSString *currentLongitude;
 
@@ -36,8 +35,6 @@
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.requestCity];
-    [self.view addSubview:self.findButton];
-    [self.findButton addTarget:self action:@selector(startSearch) forControlEvents:UIControlEventTouchUpInside];
     
     [self.tableView registerClass:[WeatherTodayTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([WeatherTodayTableViewCell class])];
@@ -61,24 +58,16 @@
 {
     if (!_requestCity)
     {
-        _requestCity = [[UITextField alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2 - 135.0f,
+        _requestCity = [[UITextField alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2 - 125.0f,
                                                                      80.0f, 250.0f, 30.0f)];
+        
         _requestCity.borderStyle = UITextBorderStyleRoundedRect;
+        _requestCity.delegate = self;
         _requestCity.placeholder = @"enter the name of your city";
     }
+    
     return _requestCity;
 }
-
-- (UIButton *)findButton
-{
-    if (!_findButton)
-    {
-        _findButton = [[UIButton alloc] initWithFrame:CGRectMake((self.view.bounds.size.width/5 * 4)+20.0f, 83.0f, 25.0f, 24.0f)];
-        _findButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"ic_btn_search.png"]];
-    }
-    return _findButton;
-}
-
 
 -(UITableView *)tableView
 {
@@ -88,7 +77,27 @@
         _tableView.delegate   = self;
         _tableView.dataSource = self;
     }
+    
     return _tableView;
+}
+
+
+#pragma mark - Text Field Delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([textField isEqual: self.requestCity]) // or textField == self.requestCity...?
+    {
+        [textField resignFirstResponder];
+        [self startSearch];
+    }
+    
+    return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [textField becomeFirstResponder];
 }
 
 
@@ -107,15 +116,17 @@
     }
 }
 
+
 #pragma mark - Core Location Delegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     CLLocation *location = [locations lastObject];
-    if(locations.count)
+    if(location)
     {
         [self.locationManager stopUpdatingLocation];
     }
-    NSLog(@"location: lat = %f, lon = %f", location.coordinate.latitude, location.coordinate.longitude);
+    
+    //NSLog(@"location: lat = %f, lon = %f", location.coordinate.latitude, location.coordinate.longitude);
     self.currentLongitude = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
     self.currentLatitude  = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
     
@@ -124,13 +135,13 @@
     
     if (isDataInDatabase)
     {
-        NSLog(@"There is the city with coordinates in Database");
+        //NSLog(@"There is the city with coordinates in Database");
         [self loadDataFromDatabaseForFirstCall];
         return;
     }
     else
     {
-        NSLog(@"НЕТУ города такого. ");
+        //NSLog(@"НЕТУ города такого. ");
         NSDictionary *coordinates = @{@"lon":self.currentLongitude ,
                                       @"lat":self.currentLatitude};
         RequestManager *requestManager = [[RequestManager alloc] initWithCoordinates:coordinates forDays:@"10"];
@@ -175,7 +186,6 @@
     }
 }
 
-// определяем что будет содержать ячейка
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0)
@@ -421,7 +431,8 @@
 
 - (void)startSearch
 {
-    BOOL isDataInDatabase = [self checkTheDatabaseForCityWithName:self.requestCity.text];
+    NSString *nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    BOOL isDataInDatabase = [self checkTheDatabaseForCityWithName:nameValue];
     if (isDataInDatabase)
     {
         // find data in database and show it on the UI
@@ -431,7 +442,7 @@
     }
     else
     {
-        RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:self.requestCity.text forDays:@"10"];
+        RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:nameValue forDays:@"10"];
         [myRequestManager currentWeatherByCityNameWithCallback:^(NSError *error, NSDictionary *result) {
             if (error)
             {
