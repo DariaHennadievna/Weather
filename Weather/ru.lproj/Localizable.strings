@@ -6,12 +6,12 @@
   Copyright (c) 2015 Admin. All rights reserved.
 */
 
-"morning" = "Утро";
-"day" = "День";
-"evening" = "Вечер";
-"night" = "Ночь";
+"morning"  = "Утро";
+"day"      = "День";
+"evening"  = "Вечер";
+"night"    = "Ночь";
 "humidity" = "Влажность:";
 "pressure" = "Давление:";
-"clouds" = "Обрачность:";
-"wind direction" = "Направление ветра:";
-"wind speed" = "Скорость ветра:";
+"clouds"   = "Обрачность:";
+"wind direction" = "Напр-е ветра:";
+"wind speed"     = "Скорость ветра:";

@@ -6,12 +6,12 @@
   Copyright (c) 2015 Admin. All rights reserved.
 */
 
-"morning" = "Morning";
-"day" = "Day";
-"evening" = "Evening";
-"night" = "Night";
+"morning"  = "Morning";
+"day"      = "Day";
+"evening"  = "Evening";
+"night"    = "Night";
 "humidity" = "Humidity:";
 "pressure" = "Pressure:";
-"clouds" = "Clouds:";
+"clouds"   = "Clouds:";
 "wind direction" = "Wind direction:";
-"wind speed" = "Wind speed:";
+"wind speed"     = "Wind speed:";

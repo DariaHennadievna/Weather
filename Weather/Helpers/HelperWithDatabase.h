@@ -19,13 +19,17 @@
 @property (nonatomic) Forecast *forecast;
 @property (nonatomic) NSString *cityName;
 @property (nonatomic) AppDelegate *appDelegate;
+@property (nonatomic) NSString *latitude;
+@property (nonatomic) NSString *longitude;
 
 // Init Methods
 - (instancetype)initWithCityName:(NSString *)name;
 - (instancetype)initWithCity:(City *)city;
+- (instancetype)initWithLatitude:(NSString *)lat andLongitude:(NSString *)lon;
+
 
 // Get City Methods
-- (City *)gettingCityWithName:(NSString *)name;
+- (City *)gettingCity;
 - (City *)gettingLastCityObjectFromDatabase;
 - (City *)gettingCityWithCoordinatesLatitude:(NSString *)lat andLongitude:(NSString *)lon;
 
@@ -34,9 +38,9 @@
 
 // Check Database Methods
 - (BOOL)checkTheDatabaseForCity:(City *)city;
-- (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName;
-- (BOOL)checkTheDatabaseForCoordinatesLatitude:(NSString *)lat andLongitude:(NSString *)lon;
-- (void)checkTheDatabaseForOutdatedForecastDataForCity:(City *)myCity;
+- (BOOL)checkTheDatabaseForCityWithName;
+- (BOOL)checkTheDatabaseForCoordinates;
+- (void)checkTheDatabaseForOutdatedForecastDataForCity;
 
 // Delete Methods
 - (void)deleteAllCitiesFromDatabase;

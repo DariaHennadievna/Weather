@@ -36,10 +36,23 @@
     return self;
 }
 
+- (instancetype)initWithLatitude:(NSString *)lat andLongitude:(NSString *)lon
+{
+    self = [super init];
+    if (self)
+    {
+        _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        _latitude = lat;
+        _longitude = lon;
+    }
+    
+    return self;
+}
+
 
 #pragma mark - Get City Methods
 
-- (City *)gettingCityWithName:(NSString *)name
+- (City *)gettingCity
 {
     City *returningCity;
     NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
@@ -47,7 +60,7 @@
     NSArray *allCities = [context executeFetchRequest:request error:nil];
     for (City *myCity in allCities)
     {
-        if ([myCity.name isEqualToString:name])
+        if ([myCity.name isEqualToString:self.cityName])
         {
             NSLog(@"citiesName is %@", myCity.name);
             returningCity = myCity;
@@ -134,7 +147,7 @@
     {
         Forecast *myForecast = [arrayWithAllForecasts objectAtIndex:i];
         [arrayWithSixForecasts addObject:myForecast];
-        NSLog(@">>%@", myForecast.date);
+        //NSLog(@">>%@", myForecast.date);
     }
     
     return arrayWithSixForecasts;
@@ -146,7 +159,6 @@
 - (BOOL)checkTheDatabaseForCity:(City *)city
 {
     // If there is the City in database, I will not send my Request. I'll use the data from the database.
-    NSLog(@"I'm here!!!");
     BOOL isCityInDatabase = NO;
     BOOL isForecastsForCity = NO;
     NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
@@ -163,15 +175,11 @@
                 if (myCity.forecasts.count > MIN_COUNT_FORECAST_IN_DATABASE)
                 {
                     isForecastsForCity = YES;
-                    NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
+                    //NSLog(@"There is thу %lu forecasts for thih city.", myCity.forecasts.count);
                 }
                 break;
             }
         }
-    }
-    else
-    {
-        NSLog(@"there is not city =(!!!");
     }
     
     if (!isCityInDatabase)
@@ -188,7 +196,7 @@
     }
 }
 
-- (BOOL)checkTheDatabaseForCityWithName:(NSString *)citiesName
+- (BOOL)checkTheDatabaseForCityWithName
 {
     // If there is the City in database, I will not send my Request. I'll use the data from the database.
     BOOL isCityInDatabase = NO;
@@ -202,23 +210,19 @@
     {
         for (City *myCity in allCities)
         {
-            if ([myCity.name isEqualToString:citiesName])
+            if ([myCity.name isEqualToString:self.cityName])
             {
                 isCityInDatabase = YES;
-                NSLog(@"There is this city with name %@ in database.", citiesName);
+                //NSLog(@"There is this city with name %@ in database.", self.cityName);
                 // проверим, есть ли у этого города какие-либо данные
                 if (myCity.forecasts.count > MIN_COUNT_FORECAST_IN_DATABASE)
                 {
                     isForecastsForCity = YES;
-                    NSLog(@"There is %lu forecasts for thih city.", myCity.forecasts.count);
+                    //NSLog(@"There is %lu forecasts for thih city.", myCity.forecasts.count);
                 }
                 break;
             }
         }
-    }
-    else
-    {
-        NSLog(@"there is not city...");
     }
     
     if (!isCityInDatabase)
@@ -236,7 +240,7 @@
 }
 
 
-- (BOOL)checkTheDatabaseForCoordinatesLatitude:(NSString *)lat andLongitude:(NSString *)lon
+- (BOOL)checkTheDatabaseForCoordinates
 {
     BOOL isCityInDatabase = NO;
     BOOL isForecastsForCity = NO;
@@ -245,12 +249,12 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
     
     // беру целое значение от долготы и широты
-    NSArray *separatedLat = [[lat mutableCopy] componentsSeparatedByString:@"." ];
+    NSArray *separatedLat = [[self.latitude mutableCopy] componentsSeparatedByString:@"." ];
     NSString *newLat = [separatedLat firstObject];
-    NSLog(@"lat %@ ", newLat);
-    NSArray *separatedLon = [[lon mutableCopy] componentsSeparatedByString:@"."];
+    //NSLog(@"lat %@ ", newLat);
+    NSArray *separatedLon = [[self.longitude mutableCopy] componentsSeparatedByString:@"."];
     NSString *newLon = [separatedLon firstObject];
-    NSLog(@"lon %@ ", newLon);
+    //NSLog(@"lon %@ ", newLon);
     
     NSArray *allCities = [context executeFetchRequest:request error:nil];
     if (allCities.count)
@@ -266,21 +270,17 @@
             if ([newCityLat isEqualToString:newLat] && [newCityLon isEqualToString:newLon])
             {
                 isCityInDatabase = YES;
-                NSLog(@"There is this city with name %@ in database.", myCity.name);
-                NSLog(@"lat %@ and lon %@", myCity.latitude, myCity.longitude);
+                //NSLog(@"There is this city with name %@ in database.", myCity.name);
+                //NSLog(@"lat %@ and lon %@", myCity.latitude, myCity.longitude);
                 // проверим, есть ли у этого города какие-либо данные
                 if (myCity.forecasts.count > MIN_COUNT_FORECAST_IN_DATABASE)
                 {
                     isForecastsForCity = YES;
-                    NSLog(@"There is  %lu forecasts for thih city.", myCity.forecasts.count);
+                   // NSLog(@"There is  %lu forecasts for thih city.", myCity.forecasts.count);
                 }
                 break;
             }
         }
-    }
-    else
-    {
-        NSLog(@"there is not city =(!!!");
     }
     
     if (!isCityInDatabase)
@@ -298,15 +298,15 @@
 }
 
 
-- (void)checkTheDatabaseForOutdatedForecastDataForCity:(City *)myCity
+- (void)checkTheDatabaseForOutdatedForecastDataForCity
 {
     //NSLog(@"Собираюсь проверить БД на наличие старых прогнозов");
     
     NSArray *cities = [[NSArray alloc] init];
-    cities = [myCity.forecasts copy];
+    cities = [self.city.forecasts copy];
     int const diff = -86400;
     
-    if (myCity.forecasts.count)
+    if (self.city.forecasts.count)
     {
         for (Forecast *myForecast in cities)
         {
@@ -336,14 +336,10 @@
                     //NSLog(@"Было столько прогнозов %lu", myCity.forecasts.count);
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     NSManagedObjectContext *context = appDelegate.managedObjectContext;
-                    [myCity removeForecastsObject:myForecast];
+                    [self.city removeForecastsObject:myForecast];
                     [context deleteObject:myForecast];
                     [appDelegate saveContext];
                     //NSLog(@"После удаления стало вот столько %lu", myCity.forecasts.count);
-                }
-                else
-                {
-                    //NSLog(@"Нет такой даты в БД. Все ОК!!!");
                 }
             }
         }
