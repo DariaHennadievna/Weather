@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  Weather
+
+  Created by Admin on 23.05.15.
+  Copyright (c) 2015 Admin. All rights reserved.
+*/
+
+"morning" = "Morning";
+"day" = "Day";
+"evening" = "Evening";
+"night" = "Night";
+"humidity" = "Humidity:";
+"pressure" = "Pressure:";
+"clouds" = "Clouds:";
+"wind direction" = "Wind direction:";
+"wind speed" = "Wind speed:";

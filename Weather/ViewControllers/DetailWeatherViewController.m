@@ -51,21 +51,19 @@
     self.cloudsValue.text   = [NSString stringWithFormat:@"%@,％", self.currentForecast.clouds];
     self.windDirectionValue.text = [NSString stringWithFormat:@"%@º", self.currentForecast.windDirection];
     self.windSpeedValue.text = [NSString stringWithFormat:@"%@,mps", self.currentForecast.windSpeed];
-        
+    
+    self.morningLabel.text = NSLocalizedString(@"morning", nil);
+    self.dayLabel.text = NSLocalizedString(@"day", nil);
+    self.eveningLabel.text = NSLocalizedString(@"evening", nil);
+    self.nightLabel.text = NSLocalizedString(@"night", nil);
+    self.humidityLabel.text = NSLocalizedString(@"humidity", nil);
+    self.pressureLabel.text = NSLocalizedString(@"pressure", nil);
+    self.cloudsLabel.text = NSLocalizedString(@"clouds", nil);
+    self.windDirectionLabel.text = NSLocalizedString(@"wind direction", nil);
+    self.windSpeedLabel.text = NSLocalizedString(@"wind speed", nil);
+
+
 }
 
-
-
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

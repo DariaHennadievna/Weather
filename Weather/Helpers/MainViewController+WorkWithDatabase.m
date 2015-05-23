@@ -158,7 +158,7 @@
                 NSDate *date = [NSDate dateWithTimeIntervalSinceNow:(diff * (i+1))];
                 //NSLog(@">%@", date);
                 
-                NSString *dateComponents = @"MMMM dd";
+                NSString *dateComponents = @"dd MMMM";
                 NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents
                                                                        options:0 locale:[NSLocale systemLocale]];
                 NSDateFormatter *dateFormatter = [NSDateFormatter new];

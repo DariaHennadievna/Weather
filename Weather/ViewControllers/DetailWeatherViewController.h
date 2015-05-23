@@ -28,6 +28,18 @@
 @property (weak, nonatomic) IBOutlet UILabel *windDirectionValue;
 @property (weak, nonatomic) IBOutlet UILabel *windSpeedValue;
 
+// Labels
+@property (weak, nonatomic) IBOutlet UILabel *morningLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UILabel *eveningLabel;
+@property (weak, nonatomic) IBOutlet UILabel *nightLabel;
+@property (weak, nonatomic) IBOutlet UILabel *humidityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pressureLabel;
+@property (weak, nonatomic) IBOutlet UILabel *cloudsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *windDirectionLabel;
+@property (weak, nonatomic) IBOutlet UILabel *windSpeedLabel;
+
+
 @property (nonatomic) Forecast *currentForecast;
 @property (nonatomic) City *currentCity;
 

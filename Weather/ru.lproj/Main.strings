@@ -1,0 +1,60 @@
+
+/* Class = "UILabel"; text = "Wind speed:"; ObjectID = "7Sn-Vi-8ch"; */
+"7Sn-Vi-8ch.text" = "Wind speed:";
+
+/* Class = "UILabel"; text = "Pressure:"; ObjectID = "CN7-9Y-e0a"; */
+"CN7-9Y-e0a.text" = "Pressure:";
+
+/* Class = "UILabel"; text = "Morning"; ObjectID = "FLG-uZ-cok"; */
+"FLG-uZ-cok.text" = "Morning";
+
+/* Class = "UILabel"; text = "\"few clouds\""; ObjectID = "FfR-hU-jif"; */
+"FfR-hU-jif.text" = "\"few clouds\"";
+
+/* Class = "UILabel"; text = "Minsk, BY"; ObjectID = "I93-OT-c3p"; */
+"I93-OT-c3p.text" = "Minsk, BY";
+
+/* Class = "UILabel"; text = "Clouds:"; ObjectID = "KPZ-R3-x9E"; */
+"KPZ-R3-x9E.text" = "Clouds:";
+
+/* Class = "UILabel"; text = "Day"; ObjectID = "LMx-kc-phu"; */
+"LMx-kc-phu.text" = "Day";
+
+/* Class = "UILabel"; text = "55.7ºC"; ObjectID = "OJA-yX-Buh"; */
+"OJA-yX-Buh.text" = "55.7ºC";
+
+/* Class = "UILabel"; text = "5,%"; ObjectID = "QhW-9T-JuE"; */
+"QhW-9T-JuE.text" = "5,%";
+
+/* Class = "UILabel"; text = "Humidity:"; ObjectID = "TYJ-7p-EyR"; */
+"TYJ-7p-EyR.text" = "Humidity:";
+
+/* Class = "UILabel"; text = "20º"; ObjectID = "Wuz-Ez-pTx"; */
+"Wuz-Ez-pTx.text" = "20º";
+
+/* Class = "UILabel"; text = "Wind direction:"; ObjectID = "YBZ-eh-dtj"; */
+"YBZ-eh-dtj.text" = "Wind direction:";
+
+/* Class = "UILabel"; text = "Evening"; ObjectID = "YVS-Tu-H3o"; */
+"YVS-Tu-H3o.text" = "Evening";
+
+/* Class = "UILabel"; text = "20,%"; ObjectID = "ZZO-NP-2ow"; */
+"ZZO-NP-2ow.text" = "20,%";
+
+/* Class = "UILabel"; text = "Night"; ObjectID = "fAP-Bh-C8e"; */
+"fAP-Bh-C8e.text" = "Night";
+
+/* Class = "UILabel"; text = "10.4ºC"; ObjectID = "hhM-KZ-F1c"; */
+"hhM-KZ-F1c.text" = "10.4ºC";
+
+/* Class = "UILabel"; text = "800,hPa"; ObjectID = "kRL-2j-Xnb"; */
+"kRL-2j-Xnb.text" = "800,hPa";
+
+/* Class = "UILabel"; text = "10.4ºC"; ObjectID = "llr-gY-Y2v"; */
+"llr-gY-Y2v.text" = "10.4ºC";
+
+/* Class = "UILabel"; text = "30.4ºC"; ObjectID = "qP8-bu-8B2"; */
+"qP8-bu-8B2.text" = "30.4ºC";
+
+/* Class = "UILabel"; text = "5.7,mps"; ObjectID = "z0Y-wn-L3U"; */
+"z0Y-wn-L3U.text" = "5.7,mps";

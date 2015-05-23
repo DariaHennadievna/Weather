@@ -26,6 +26,7 @@
 		848E33141B03CD2D000D7A23 /* DetailWeatherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 848E33131B03CD2D000D7A23 /* DetailWeatherViewController.m */; };
 		849AA1D41B0A5B3B00F8A097 /* HelperWithDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AA1D31B0A5B3B00F8A097 /* HelperWithDatabase.m */; };
 		84D35C3C1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D35C3B1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m */; };
+		84DE3DBE1B1116F200DDCAC2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84DE3DC01B1116F200DDCAC2 /* Localizable.strings */; };
 		A11BCE03FEF56E25236EB1D1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C15D2CCA0B85F868CD7930 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,9 @@
 		849AA1D31B0A5B3B00F8A097 /* HelperWithDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelperWithDatabase.m; path = Helpers/HelperWithDatabase.m; sourceTree = "<group>"; };
 		84D35C3A1B063CB900570AF9 /* MainViewController+WorkWithDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MainViewController+WorkWithDatabase.h"; path = "Helpers/MainViewController+WorkWithDatabase.h"; sourceTree = "<group>"; };
 		84D35C3B1B063CB900570AF9 /* MainViewController+WorkWithDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MainViewController+WorkWithDatabase.m"; path = "Helpers/MainViewController+WorkWithDatabase.m"; sourceTree = "<group>"; };
+		84DE3DBB1B1116C000DDCAC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		84DE3DBF1B1116F200DDCAC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		84DE3DC11B1116F400DDCAC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D9D5A4AC1408D662CCFE028C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F4C15D2CCA0B85F868CD7930 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -183,6 +187,7 @@
 		8485E35A1AF92D4800D59A71 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				84DE3DC01B1116F200DDCAC2 /* Localizable.strings */,
 				8485E3611AF92D4800D59A71 /* Weather.xcdatamodeld */,
 				8485E36A1AF92D4800D59A71 /* Images.xcassets */,
 				8485E35B1AF92D4800D59A71 /* Info.plist */,
@@ -308,6 +313,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 8485E34E1AF92D4800D59A71;
 			productRefGroup = 8485E3581AF92D4800D59A71 /* Products */;
@@ -326,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8485E3691AF92D4800D59A71 /* Main.storyboard in Resources */,
+				84DE3DBE1B1116F200DDCAC2 /* Localizable.strings in Resources */,
 				8485E36B1AF92D4800D59A71 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -419,8 +426,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				8485E3681AF92D4800D59A71 /* Base */,
+				84DE3DBB1B1116C000DDCAC2 /* ru */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		84DE3DC01B1116F200DDCAC2 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84DE3DBF1B1116F200DDCAC2 /* en */,
+				84DE3DC11B1116F400DDCAC2 /* ru */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

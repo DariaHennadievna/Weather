@@ -28,7 +28,8 @@
 
 @implementation MainViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     self.title = @"Weather";
@@ -51,6 +52,10 @@
     //[self deleteAllCitiesFromDatabase];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self startGetLocation];
+}
 
 #pragma mark - Views
 

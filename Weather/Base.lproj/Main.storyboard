@@ -103,31 +103,31 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Humidity:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYJ-7p-EyR">
-                                <rect key="frame" x="63" y="230" width="80" height="21"/>
+                                <rect key="frame" x="10" y="230" width="133" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pressure:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CN7-9Y-e0a">
-                                <rect key="frame" x="63" y="259" width="80" height="21"/>
+                                <rect key="frame" x="16" y="259" width="127" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Clouds:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KPZ-R3-x9E">
-                                <rect key="frame" x="63" y="288" width="80" height="21"/>
+                                <rect key="frame" x="16" y="288" width="127" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="5,%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QhW-9T-JuE">
-                                <rect key="frame" x="188" y="230" width="87" height="21"/>
+                                <rect key="frame" x="188" y="230" width="116" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="20,%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZZO-NP-2ow">
-                                <rect key="frame" x="188" y="288" width="87" height="21"/>
+                                <rect key="frame" x="188" y="288" width="114" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -139,7 +139,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="20º" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wuz-Ez-pTx">
-                                <rect key="frame" x="188" y="317" width="87" height="21"/>
+                                <rect key="frame" x="188" y="317" width="114" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -150,14 +150,8 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Wind speed:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Sn-Vi-8ch">
-                                <rect key="frame" x="16" y="346" width="127" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="5.7,mps" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z0Y-wn-L3U">
-                                <rect key="frame" x="188" y="346" width="87" height="21"/>
+                                <rect key="frame" x="188" y="346" width="114" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -174,21 +168,36 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Wind speed:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Sn-Vi-8ch">
+                                <rect key="frame" x="16" y="346" width="127" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="6Lu-vE-WwA"/>
                     <connections>
                         <outlet property="cityName" destination="I93-OT-c3p" id="U05-tW-cow"/>
+                        <outlet property="cloudsLabel" destination="KPZ-R3-x9E" id="JbK-Bd-W3k"/>
                         <outlet property="cloudsValue" destination="ZZO-NP-2ow" id="JiG-iA-kNh"/>
+                        <outlet property="dayLabel" destination="LMx-kc-phu" id="4o9-cl-FaW"/>
+                        <outlet property="eveningLabel" destination="YVS-Tu-H3o" id="QEM-dU-X4l"/>
+                        <outlet property="humidityLabel" destination="TYJ-7p-EyR" id="8ux-9n-j4t"/>
                         <outlet property="humidityValue" destination="QhW-9T-JuE" id="oVG-4r-GYe"/>
+                        <outlet property="morningLabel" destination="FLG-uZ-cok" id="9gX-fG-3g9"/>
+                        <outlet property="nightLabel" destination="fAP-Bh-C8e" id="vin-6q-T1K"/>
+                        <outlet property="pressureLabel" destination="CN7-9Y-e0a" id="DUz-qD-FWq"/>
                         <outlet property="pressureValue" destination="kRL-2j-Xnb" id="qD8-qQ-hf3"/>
                         <outlet property="tempDay" destination="OJA-yX-Buh" id="0GB-Xi-Eg6"/>
                         <outlet property="tempEvening" destination="llr-gY-Y2v" id="ioC-ww-iTN"/>
                         <outlet property="tempMorning" destination="qP8-bu-8B2" id="jBY-tC-2id"/>
                         <outlet property="tempNight" destination="hhM-KZ-F1c" id="Idw-Q0-5uC"/>
                         <outlet property="weatherStatus" destination="FfR-hU-jif" id="le4-Qj-Vbq"/>
+                        <outlet property="windDirectionLabel" destination="YBZ-eh-dtj" id="ZAy-Uk-Xer"/>
                         <outlet property="windDirectionValue" destination="Wuz-Ez-pTx" id="rr8-OS-g8e"/>
+                        <outlet property="windSpeedLabel" destination="7Sn-Vi-8ch" id="jlf-fy-w4d"/>
                         <outlet property="windSpeedValue" destination="z0Y-wn-L3U" id="5iA-3O-MmB"/>
                     </connections>
                 </viewController>
