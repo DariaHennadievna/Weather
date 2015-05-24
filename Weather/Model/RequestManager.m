@@ -64,6 +64,7 @@
     }];
 }
 
+
 - (void)currentWeatherByCoordinatesWithCallback:(void (^)(NSError *error, NSDictionary *result))callback
 {
     NSDictionary *parameters = [self gettingParamWithCoordinates];
@@ -109,7 +110,9 @@
         return nil;
     }
     
-    NSDictionary *keyParams = @{@"q":self.keyParamForSearch,
+    NSString *newParamForSearch = [[self.keyParamForSearch copy] stringByAddingPercentEscapesUsingEncoding:
+                                                                                     NSUTF8StringEncoding];
+    NSDictionary *keyParams = @{@"q":newParamForSearch,
                                 @"cnt":self.countOfDays};
     if (keyParams.allKeys.count)
     {
@@ -132,8 +135,6 @@
         [keyValues addObject:keyValue];
     }
     [requestURL appendString:[keyValues componentsJoinedByString:@"&"]];
-    
-    //NSLog(@"requestURL: %@", requestURL);
     return [NSURL URLWithString:requestURL];
 }
 
@@ -153,7 +154,9 @@
 
 -(NSDictionary *)gettingParamWithNameOfCity
 {
-    NSDictionary *keyParams = @{@"q":self.keyParamForSearch};
+    NSString *newParamForSearch = [[self.keyParamForSearch copy] stringByAddingPercentEscapesUsingEncoding:
+                                                                                      NSUTF8StringEncoding];
+    NSDictionary *keyParams = @{@"q":newParamForSearch};
     NSDictionary *cntParam = @{@"cnt":self.countOfDays};
     NSMutableDictionary *temp = [keyParams mutableCopy];
     [temp addEntriesFromDictionary:self.additionalParams];

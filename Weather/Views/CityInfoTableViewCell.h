@@ -13,4 +13,8 @@
 @property (nonatomic) UILabel *cityAndCountryName;
 @property (nonatomic) UILabel *date;
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder;
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
+
+
 @end

@@ -14,7 +14,6 @@
 #import "DataModel.h"
 #import "DetailWeatherViewController.h"
 #import "AppDelegate.h"
-#import "MainViewController+WorkWithDatabase.h"
 #import "HelperWithDatabase.h"
 #import <CoreLocation/CoreLocation.h>
 #import <CoreLocation/CLLocationManager.h>

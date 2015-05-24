@@ -24,6 +24,7 @@
         myCity.longitude = [NSString stringWithFormat:@"%@", [data objectForKey:LONGITUDE]];
         myCity.country   = [NSString stringWithFormat:@"%@", [data objectForKey:COUNTRY]];
     }
+    
     return myCity;
 }
 

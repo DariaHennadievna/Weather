@@ -53,10 +53,6 @@
     //[self deleteAllCitiesFromDatabase];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [self startGetLocation];
-}
 
 #pragma mark - Views
 
@@ -79,7 +75,7 @@
 {
     if (!_tableView)
     {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 120.0f, self.view.frame.size.width, self.view.frame.size.height-80.0f) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 120.0f,                                                                  self.view.frame.size.width, self.view.frame.size.height-80.0f) style:UITableViewStylePlain];
         _tableView.delegate   = self;
         _tableView.dataSource = self;
     }
@@ -92,7 +88,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if ([textField isEqual: self.requestCity]) // or textField == self.requestCity...?
+    if ([textField isEqual: self.requestCity])
     {
         [textField resignFirstResponder];
         [self startSearch];
@@ -124,6 +120,7 @@
 
 
 #pragma mark - Core Location Delegate
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     CLLocation *location = [locations lastObject];
@@ -132,28 +129,23 @@
         [self.locationManager stopUpdatingLocation];
     }
     
-    //NSLog(@"location: lat = %f, lon = %f", location.coordinate.latitude, location.coordinate.longitude);
     self.currentLongitude = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
     self.currentLatitude  = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
     
     HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithLatitude:self.currentLatitude
-                                                                 andLongitude:self.currentLongitude];// new
-    BOOL isDataInDatabase = [helper checkTheDatabaseForCoordinates];// new
-    
-    //BOOL isDataInDatabase = [self checkTheDatabaseForCoordinatesLatitude:self.currentLatitude
-                                                           // andLongitude:self.currentLongitude];
+                                                                 andLongitude:self.currentLongitude];
+    BOOL isDataInDatabase = [helper checkTheDatabaseForCoordinates];
     
     if (isDataInDatabase)
     {
-        //NSLog(@"There is the city with coordinates in Database");
+        //NSLog(@"There is the city with these coordinates in Database.");
         [self loadDataFromDatabaseForFirstCall];
         return;
     }
     else
     {
-        //NSLog(@"НЕТУ города такого. ");
-        NSDictionary *coordinates = @{@"lon":self.currentLongitude ,
-                                      @"lat":self.currentLatitude};
+        //NSLog(@"There is not the city with these coordinates in Database.");
+        NSDictionary *coordinates = @{@"lon":self.currentLongitude, @"lat":self.currentLatitude};
         RequestManager *requestManager = [[RequestManager alloc] initWithCoordinates:coordinates forDays:@"10"];
         [requestManager currentWeatherByCoordinatesWithCallback:^(NSError *error, NSDictionary *result) {
             if (error)
@@ -192,7 +184,12 @@
     }
     else
     {
-        return [[self configureForWeatherForecastTableViewCell] count];
+        NSArray *forecastsForCurrentCity = [self configureForWeatherForecastTableViewCell];
+        if(!forecastsForCurrentCity)
+        {
+            return 5;
+        }        
+        return forecastsForCurrentCity.count;
     }
 }
 
@@ -209,6 +206,7 @@
             cityInfoTableCell.cityAndCountryName.text = [NSString stringWithFormat:@"%@, %@", cityName, country];
             cityInfoTableCell.date.text = [self gettingStringWithDate:self.todayIsDate];
         }
+        
         return cityInfoTableCell;
     }
     else if (indexPath.section == 1)
@@ -220,30 +218,28 @@
             Forecast *forecastForToday = [self configureForWeatherTodayTableViewCell];
             
             weatherTodayTableCell.todayIs.text = [self gettingStringWithDate:self.todayIsDate];
-            NSString *str1; //= forecastForToday.tempMin;
-            NSString *str2; //= forecastForToday.tempMax;
+            NSString *strTempMin;
+            NSString *strTempMax;
             if (forecastForToday.tempMin.length> 4)
             {
-                str1 = [forecastForToday.tempMin substringToIndex:4];
+                strTempMin = [forecastForToday.tempMin substringToIndex:4];
             }
             else
             {
-                str1 = forecastForToday.tempMin;
+                strTempMin = forecastForToday.tempMin;
             }
             
             if (forecastForToday.tempMax.length> 4)
             {
-                str2 = [forecastForToday.tempMax substringToIndex:4];
+                strTempMax = [forecastForToday.tempMax substringToIndex:4];
             }
             else
             {
-                str2 = forecastForToday.tempMax;
+                strTempMax = forecastForToday.tempMax;
             }
             weatherTodayTableCell.temperature.text = [NSString stringWithFormat:@"%@-%@ºC",
-                                                      str1, str2];
-            
+                                                                    strTempMin, strTempMax];
             NSString *nameForIcon = [forecastForToday.icon stringByAppendingString:@".png"];
-                
             weatherTodayTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
         }
         
@@ -261,31 +257,31 @@
             NSString *strDate = [self gettingStringWithDate:date];
             weatherForecastTableCell.date.text = strDate;
             
-            NSString *str1; //= forecastForToday.tempMin;
-            NSString *str2; //= forecastForToday.tempMax;
+            NSString *strTempMin;
+            NSString *strTempMax;
             if (forecastFromArray.tempMin.length> 4)
             {
-                str1 = [forecastFromArray.tempMin substringToIndex:4];
+                strTempMin = [forecastFromArray.tempMin substringToIndex:4];
             }
             else
             {
-                str1 = forecastFromArray.tempMin;
+                strTempMin = forecastFromArray.tempMin;
             }
             
             if (forecastFromArray.tempMax.length> 4)
             {
-                str2 = [forecastFromArray.tempMax substringToIndex:4];
+                strTempMax = [forecastFromArray.tempMax substringToIndex:4];
             }
             else
             {
-                str2 = forecastFromArray.tempMax;
+                strTempMax = forecastFromArray.tempMax;
             }
             weatherForecastTableCell.temperature.text = [NSString stringWithFormat:@"%@-%@ºC",
-                                                         str1, str2];
+                                                                       strTempMin, strTempMax];
             NSString *nameForIcon = [forecastFromArray.icon stringByAppendingString:@".png"];
-            
             weatherForecastTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
         }
+        
         return weatherForecastTableCell;
     }
 }
@@ -299,7 +295,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{   
     if (indexPath.section == 0)
     {
         return 20.0f;
@@ -328,8 +324,8 @@
     }
     else if (indexPath.section == 2)
     {
-        WeatherForecastTableViewCell  *cell = (WeatherForecastTableViewCell  *)
-                                              [tableView cellForRowAtIndexPath:indexPath];
+        WeatherForecastTableViewCell  *cell =
+            (WeatherForecastTableViewCell  *)[tableView cellForRowAtIndexPath:indexPath];
         self.nameForDestinationVC = cell.date.text;
         self.currentForecast = [[self configureForWeatherForecastTableViewCell] objectAtIndex:indexPath.row];
         [self performSegueWithIdentifier:@"ShowDetailWeather" sender:self];
@@ -338,9 +334,9 @@
 
 -(void)deselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];    
 }
+
 
 # pragma mark - Data Processing
 
@@ -348,29 +344,18 @@
 {
     NSDictionary *newCityData = [self.dataModel gettingCityInfo];
     [self.dataModel savingCityData:newCityData];
-    
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
-    City *currentCity = [self gettingCityWithName:self.requestCity.text];
-    
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCity:currentCity];// new
-    [helper checkTheDatabaseForOutdatedForecastDataForCity];// new
-    //[self checkDatabaseForOutdatedForecastDataForCity:currentCity];
+    NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+                                                                    NSUTF8StringEncoding];
+    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];
+    City *currentCity = [helperWithName gettingCity];
+    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCity:currentCity];
+    [helper checkTheDatabaseForOutdatedForecastDataForCity];
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
     
     [self loadDate];
     
     [self.tableView reloadData];
-}
-
-- (NSString *)gettingStringWithDate:(NSDate *)date
-{
-    NSString *dateComponents = @"dd MMMM";
-    NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents
-                                                           options:0 locale:[NSLocale systemLocale]];
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = dateFormat;
-    return [dateFormatter stringFromDate:date];
-
 }
 
 - (void)savingDataInDatabaseForFirstCall
@@ -380,32 +365,91 @@
     NSString *nameOfCity = [newCityData objectForKey:CITY_NAME];
     
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
-    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:nameOfCity];// new
-    City *currentCity = [helperWithName gettingCity];// new
-    //[self gettingCityWithName:nameOfCity];
+    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:nameOfCity];
+    City *currentCity = [helperWithName gettingCity];
     
-    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:currentCity];// new
-    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];// new
-    //[self checkDatabaseForOutdatedForecastDataForCity:currentCity];
+    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:currentCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
     
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
 }
 
 - (void)loadDataFromDatabaseForFirstCall
 {
-    City *myCurrentCity = [self gettingCityWithCoordinatesLatitude:self.currentLatitude
-                                                      andLongitude:self.currentLongitude];
+    HelperWithDatabase *helperWithCoordinates = [[HelperWithDatabase alloc] initWithLatitude:self.currentLatitude
+                                                                                andLongitude:self.currentLongitude];
+    City *myCurrentCity = [helperWithCoordinates gettingCityWithCoordinates];
     self.currentCity = myCurrentCity;
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCity:self.currentCity];// new
-    [helper checkTheDatabaseForOutdatedForecastDataForCity];// new
-    //[self checkDatabaseForOutdatedForecastDataForCity:self.currentCity];
     
-    NSArray *myForecasts = [helper gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];// new
-    //NSArray *myForecasts = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
+    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    
+    NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
     self.forecastsForUI = myForecasts;
     [self.tableView reloadData];
 }
 
+-(void)loadDate
+{
+    NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+                                    NSUTF8StringEncoding];
+    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];
+    City *myCity = [helperWithName gettingCity];
+    self.currentCity = myCity;
+    
+    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
+    self.forecastsForUI = myForecasts;
+}
+
+
+#pragma mark - Request. Get data.
+
+- (void)startSearch
+{
+    NSString *nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+                                                                            NSUTF8StringEncoding];
+    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCityName:nameValue];
+    BOOL isDataInDatabase = [helper checkTheDatabaseForCityWithName];
+    if (isDataInDatabase)
+    {
+        // NSLog(@"Start search in Database");
+        [self loadDate];
+        [self.tableView reloadData];
+    }
+    else
+    {
+        // NSLog(@"I need new data for this city");
+        RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:nameValue forDays:@"10"];
+        [myRequestManager currentWeatherByCityNameWithCallback:^(NSError *error, NSDictionary *result) {
+            if (error)
+            {
+                return;
+            }
+            DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:result];
+            self.dataModel = myDataModel;
+            if (self.dataModel)
+            {
+                [self dataProcessing];
+            }
+        }];
+    }
+}
+
+
+#pragma mark - Helpers
+
+- (NSString *)gettingStringWithDate:(NSDate *)date
+{
+    NSString *dateComponents = @"dd MMMM";
+    NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents
+                                                           options:0 locale:[NSLocale systemLocale]];
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = dateFormat;
+    return [dateFormatter stringFromDate:date];
+    
+}
 
 - (Forecast *)configureForWeatherTodayTableViewCell
 {
@@ -439,76 +483,6 @@
     return weatherForecast;
 }
 
--(void)loadDate
-{
-    NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];// new
-    City *myCity = [helperWithName gettingCity];// new
-    //City *myCity = [self gettingCityWithName:self.requestCity.text];
-    
-    self.currentCity = myCity;
-    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];// new
-    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];// new
-    //[self checkDatabaseForOutdatedForecastDataForCity:self.currentCity];
-    NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];// new
-    //NSArray *myForecasts = [self gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
-    self.forecastsForUI = myForecasts;
-}
-
-
-#pragma mark - Actions. Get data.
-
-- (void)startSearch
-{
-    NSString *nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
-                                                                            NSUTF8StringEncoding];
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCityName:nameValue];// new
-    BOOL isDataInDatabase = [helper checkTheDatabaseForCityWithName];// new
-   // BOOL isDataInDatabase = [self checkTheDatabaseForCityWithName:nameValue];
-    if (isDataInDatabase)
-    {
-        // find data in database and show it on the UI
-        NSLog(@"Start search in Database");
-        [self loadDate];
-        [self.tableView reloadData];
-    }
-    else
-    {
-        RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:nameValue forDays:@"10"];
-        [myRequestManager currentWeatherByCityNameWithCallback:^(NSError *error, NSDictionary *result) {
-            if (error)
-            {
-                return;
-            }
-            DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:result];
-            self.dataModel = myDataModel;
-            if (self.dataModel)
-            {
-                [self dataProcessing];
-            }
-        }];
-        
-        /*NSURL *myRequest = [myRequestManager generatingRequestURL];
-        NSLog(@"myRequest: %@", myRequest);
-        if (myRequest)
-        {
-            // GCD - Grand Central Dispatch.
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(){
-                NSData *data = [NSData dataWithContentsOfURL:myRequest];
-                NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data
-                                                                    options:NSJSONReadingAllowFragments error:nil];
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    DataModel *myDataModel = [[DataModel alloc] initWithWeatherData:response];
-                    self.dataModel = myDataModel;
-                    if (self.dataModel)
-                    {
-                        [self dataProcessing];
-                    }
-                });
-            });
-        }*/
-    }
-}
 
 #pragma mark - Navigation
 

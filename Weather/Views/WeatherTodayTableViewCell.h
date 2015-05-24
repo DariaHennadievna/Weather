@@ -14,4 +14,7 @@
 @property (nonatomic) UILabel *temperature;
 @property (nonatomic) UIView  *weatherStatus;
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder;
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
+
 @end

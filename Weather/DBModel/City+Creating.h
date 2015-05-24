@@ -9,6 +9,7 @@
 #import "City.h"
 #import "AppDelegate.h"
 
+// my keys
 #define CITY_NAME @"name"
 #define CITY_ID   @"id"
 #define COUNTRY   @"country"

@@ -27,11 +27,10 @@
 - (instancetype)initWithCity:(City *)city;
 - (instancetype)initWithLatitude:(NSString *)lat andLongitude:(NSString *)lon;
 
-
 // Get City Methods
 - (City *)gettingCity;
 - (City *)gettingLastCityObjectFromDatabase;
-- (City *)gettingCityWithCoordinatesLatitude:(NSString *)lat andLongitude:(NSString *)lon;
+- (City *)gettingCityWithCoordinates;
 
 // Get Forecasts Methods
 - (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity;

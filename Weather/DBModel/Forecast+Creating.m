@@ -34,9 +34,8 @@
         myForecast.date          = [data objectForKey:DATE];
         myForecast.icon          = [NSString stringWithFormat:@"%@", [data objectForKey:ICON]];
         myForecast.city          = myCity;
-       
-        
     }
+    
     return myForecast;
 }
 

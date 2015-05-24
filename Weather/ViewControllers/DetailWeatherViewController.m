@@ -20,26 +20,19 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self configureForLabels];
     [self loadData];
-
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-    
-}
-
--(void)configureForLabels
+- (void)configureForLabels
 {
     self.cityName.textColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
     self.weatherStatus.textColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
-    
 }
 
 - (void)loadData
 {
     NSString *cityName = self.currentCity.name;
     NSString *country  = self.currentCity.country;
+    
     self.cityName.text = [NSString stringWithFormat:@"%@, %@", cityName, country];
     self.weatherStatus.text = self.currentForecast.weatherStatus;
     self.tempMorning.text = self.currentForecast.tempMorn;
@@ -52,6 +45,7 @@
     self.windDirectionValue.text = [NSString stringWithFormat:@"%@º", self.currentForecast.windDirection];
     self.windSpeedValue.text = [NSString stringWithFormat:@"%@,mps", self.currentForecast.windSpeed];
     
+    // Labels
     self.morningLabel.text = NSLocalizedString(@"morning", nil);
     self.dayLabel.text = NSLocalizedString(@"day", nil);
     self.eveningLabel.text = NSLocalizedString(@"evening", nil);
@@ -61,8 +55,6 @@
     self.cloudsLabel.text = NSLocalizedString(@"clouds", nil);
     self.windDirectionLabel.text = NSLocalizedString(@"wind direction", nil);
     self.windSpeedLabel.text = NSLocalizedString(@"wind speed", nil);
-
-
 }
 
 

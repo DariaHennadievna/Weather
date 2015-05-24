@@ -27,8 +27,6 @@
 #define ICON           @"icon"
 
 
-
-
 @interface Forecast (Creating)
 
 + (Forecast *)forecastWithData:(NSDictionary *)data forCity:(City *)myCity;

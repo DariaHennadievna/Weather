@@ -10,31 +10,33 @@
 
 @implementation CityInfoTableViewCell
 
--(instancetype)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-    if(self)
+    if (self)
     {
         self.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.3f];
         [self configureCell];
     }
+    
     return self;
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self)
+    if (self)
     {
         self.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.3f];
         [self configureCell];
     }
+    
     return self;
 }
 
--(void)configureCell
+- (void)configureCell
 {
-    self.cityAndCountryName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 150.0f, 20.0f)];
+    self.cityAndCountryName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 200.0f, 20.0f)];
     self.cityAndCountryName.textAlignment = NSTextAlignmentLeft;
     [self addSubview:self.cityAndCountryName];
     
