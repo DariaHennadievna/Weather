@@ -14,7 +14,10 @@
 #import "DataModel.h"
 #import "DetailWeatherViewController.h"
 #import "AppDelegate.h"
-#import "HelperWithDatabase.h"
+#import "MyHelperWithCity.h"
+#import "MyHelperWithCityName.h"
+#import "MyHelperWithCoordinates.h"
+#import "MyCleanerDatabase.h"
 #import <CoreLocation/CoreLocation.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>

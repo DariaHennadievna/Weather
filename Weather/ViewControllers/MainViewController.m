@@ -50,8 +50,8 @@
     [self startGetLocation];
     
     // if I want, I can delete all cities and forecasts for them from the database...
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] init];
-    [helper deleteAllCitiesFromDatabase];
+    //MyCleanerDatabase *cleaner = [[MyCleanerDatabase alloc] initCleaner];
+    //[cleaner deleteAllCitiesFromDatabase];
 }
 
 
@@ -133,9 +133,20 @@
     self.currentLongitude = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
     self.currentLatitude  = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
     
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithLatitude:self.currentLatitude
-                                                                 andLongitude:self.currentLongitude];
-    BOOL isDataInDatabase = [helper checkTheDatabaseForCoordinates];
+//    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithLatitude:self.currentLatitude
+//                                                                 andLongitude:self.currentLongitude];
+    
+    MyHelperWithCoordinates *helperWithCoordinates = [[MyHelperWithCoordinates alloc]
+                                                      initWithLatitude:self.currentLatitude
+                                                      andLongitude:self.currentLongitude];
+    BOOL isDataInDatabase;
+    City *currCity = [helperWithCoordinates gettingCityWithCoordinates];
+    if (currCity)
+    {
+        MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currCity];
+        [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+        isDataInDatabase = [helperWithCity checkTheDatabaseForCity:currCity];
+    }
     
     if (isDataInDatabase)
     {
@@ -348,10 +359,12 @@
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
     NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                                                     NSUTF8StringEncoding];
-    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];
-    City *currentCity = [helperWithName gettingCity];
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCity:currentCity];
-    [helper checkTheDatabaseForOutdatedForecastDataForCity];
+    //HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];
+    MyHelperWithCityName *helperWithCityName = [[MyHelperWithCityName alloc] initWithCityName:newRequestWord];
+    City *currentCity = [helperWithCityName gettingCity];
+    //HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCity:currentCity];
+    MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currentCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
     
     [self loadDate];
@@ -366,10 +379,12 @@
     NSString *nameOfCity = [newCityData objectForKey:CITY_NAME];
     
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
-    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:nameOfCity];
-    City *currentCity = [helperWithName gettingCity];
+    //HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:nameOfCity];
+    MyHelperWithCityName *helperWithCityName = [[MyHelperWithCityName alloc] initWithCityName:nameOfCity];
+    City *currentCity = [helperWithCityName gettingCity];
     
-    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:currentCity];
+    //HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:currentCity];
+    MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currentCity];
     [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
     
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
@@ -377,13 +392,20 @@
 
 - (void)loadDataFromDatabaseForFirstCall
 {
-    HelperWithDatabase *helperWithCoordinates = [[HelperWithDatabase alloc] initWithLatitude:self.currentLatitude
-                                                                                andLongitude:self.currentLongitude];
+//    HelperWithDatabase *helperWithCoordinates = [[HelperWithDatabase alloc] initWithLatitude:self.currentLatitude
+//                                                                                andLongitude:self.currentLongitude];
+    
+    MyHelperWithCoordinates *helperWithCoordinates = [[MyHelperWithCoordinates alloc]
+                                                      initWithLatitude:self.currentLatitude
+                                                      andLongitude:self.currentLongitude];
+    
     City *myCurrentCity = [helperWithCoordinates gettingCityWithCoordinates];
     self.currentCity = myCurrentCity;
     
-    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
+//    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
+    MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:self.currentCity];
     [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    //[helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
     
     NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
     self.forecastsForUI = myForecasts;
@@ -394,11 +416,13 @@
 {
     NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                     NSUTF8StringEncoding];
-    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];
+//    HelperWithDatabase *helperWithName = [[HelperWithDatabase alloc] initWithCityName:newRequestWord];
+    MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:newRequestWord];
     City *myCity = [helperWithName gettingCity];
     self.currentCity = myCity;
     
-    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
+//    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
+    MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:self.currentCity];
     [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
     NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
     self.forecastsForUI = myForecasts;
@@ -409,10 +433,19 @@
 
 - (void)startSearch
 {
+    BOOL isDataInDatabase;
     NSString *nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                                                             NSUTF8StringEncoding];
-    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCityName:nameValue];
-    BOOL isDataInDatabase = [helper checkTheDatabaseForCityWithName];
+//    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCityName:nameValue];
+    MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:nameValue];
+    City *currCity = [helperWithName gettingCity];
+    if (currCity)
+    {
+        MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currCity];
+        [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+        isDataInDatabase = [helperWithName checkTheDatabaseForCityWithName];
+    }
+    
     if (isDataInDatabase)
     {
         // NSLog(@"Start search in Database");

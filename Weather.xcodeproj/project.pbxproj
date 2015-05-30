@@ -26,6 +26,13 @@
 		848E33141B03CD2D000D7A23 /* DetailWeatherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 848E33131B03CD2D000D7A23 /* DetailWeatherViewController.m */; };
 		849AA1D41B0A5B3B00F8A097 /* HelperWithDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AA1D31B0A5B3B00F8A097 /* HelperWithDatabase.m */; };
 		84DE3DBE1B1116F200DDCAC2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84DE3DC01B1116F200DDCAC2 /* Localizable.strings */; };
+		84F7E2811B1A241A00F7016B /* HelperWithCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E2801B1A241A00F7016B /* HelperWithCity.m */; };
+		84F7E2841B1A262600F7016B /* HelperWithCityName.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E2831B1A262600F7016B /* HelperWithCityName.m */; };
+		84F7E2871B1A29F800F7016B /* HelperWithCoordinates.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E2861B1A29F800F7016B /* HelperWithCoordinates.m */; };
+		84F7E28B1B1A354700F7016B /* MyHelperWithCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E28A1B1A354700F7016B /* MyHelperWithCity.m */; };
+		84F7E28E1B1A39F900F7016B /* MyHelperWithCityName.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E28D1B1A39F900F7016B /* MyHelperWithCityName.m */; };
+		84F7E2911B1A3CCC00F7016B /* MyHelperWithCoordinates.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E2901B1A3CCC00F7016B /* MyHelperWithCoordinates.m */; };
+		84F7E2941B1A400100F7016B /* MyCleanerDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F7E2931B1A400100F7016B /* MyCleanerDatabase.m */; };
 		A11BCE03FEF56E25236EB1D1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C15D2CCA0B85F868CD7930 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +86,20 @@
 		84DE3DBB1B1116C000DDCAC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		84DE3DBF1B1116F200DDCAC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		84DE3DC11B1116F400DDCAC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		84F7E27F1B1A241A00F7016B /* HelperWithCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelperWithCity.h; path = Helpers/HelperWithCity.h; sourceTree = "<group>"; };
+		84F7E2801B1A241A00F7016B /* HelperWithCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelperWithCity.m; path = Helpers/HelperWithCity.m; sourceTree = "<group>"; };
+		84F7E2821B1A262600F7016B /* HelperWithCityName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelperWithCityName.h; path = Helpers/HelperWithCityName.h; sourceTree = "<group>"; };
+		84F7E2831B1A262600F7016B /* HelperWithCityName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelperWithCityName.m; path = Helpers/HelperWithCityName.m; sourceTree = "<group>"; };
+		84F7E2851B1A29F800F7016B /* HelperWithCoordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelperWithCoordinates.h; path = Helpers/HelperWithCoordinates.h; sourceTree = "<group>"; };
+		84F7E2861B1A29F800F7016B /* HelperWithCoordinates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelperWithCoordinates.m; path = Helpers/HelperWithCoordinates.m; sourceTree = "<group>"; };
+		84F7E2891B1A354700F7016B /* MyHelperWithCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyHelperWithCity.h; path = Helpers/NewHelpers/MyHelperWithCity.h; sourceTree = "<group>"; };
+		84F7E28A1B1A354700F7016B /* MyHelperWithCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyHelperWithCity.m; path = Helpers/NewHelpers/MyHelperWithCity.m; sourceTree = "<group>"; };
+		84F7E28C1B1A39F900F7016B /* MyHelperWithCityName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyHelperWithCityName.h; path = Helpers/NewHelpers/MyHelperWithCityName.h; sourceTree = "<group>"; };
+		84F7E28D1B1A39F900F7016B /* MyHelperWithCityName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyHelperWithCityName.m; path = Helpers/NewHelpers/MyHelperWithCityName.m; sourceTree = "<group>"; };
+		84F7E28F1B1A3CCC00F7016B /* MyHelperWithCoordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyHelperWithCoordinates.h; path = Helpers/NewHelpers/MyHelperWithCoordinates.h; sourceTree = "<group>"; };
+		84F7E2901B1A3CCC00F7016B /* MyHelperWithCoordinates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyHelperWithCoordinates.m; path = Helpers/NewHelpers/MyHelperWithCoordinates.m; sourceTree = "<group>"; };
+		84F7E2921B1A400100F7016B /* MyCleanerDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCleanerDatabase.h; path = Helpers/NewHelpers/MyCleanerDatabase.h; sourceTree = "<group>"; };
+		84F7E2931B1A400100F7016B /* MyCleanerDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCleanerDatabase.m; path = Helpers/NewHelpers/MyCleanerDatabase.m; sourceTree = "<group>"; };
 		D9D5A4AC1408D662CCFE028C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F4C15D2CCA0B85F868CD7930 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -168,7 +189,7 @@
 		8485E3591AF92D4800D59A71 /* Weather */ = {
 			isa = PBXGroup;
 			children = (
-				84D35C391B06394800570AF9 /* Helpers */,
+				84D35C391B06394800570AF9 /* Helpers with DB */,
 				8438DC971B04D95D00FE6F5C /* DBModel */,
 				848E33051B0378C8000D7A23 /* Views */,
 				848E32FE1B0374B6000D7A23 /* ViewControllers */,
@@ -234,13 +255,35 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
-		84D35C391B06394800570AF9 /* Helpers */ = {
+		84D35C391B06394800570AF9 /* Helpers with DB */ = {
+			isa = PBXGroup;
+			children = (
+				84F7E2881B1A347900F7016B /* subclasses of HelperWithDB */,
+				84F7E2891B1A354700F7016B /* MyHelperWithCity.h */,
+				84F7E28A1B1A354700F7016B /* MyHelperWithCity.m */,
+				84F7E28C1B1A39F900F7016B /* MyHelperWithCityName.h */,
+				84F7E28D1B1A39F900F7016B /* MyHelperWithCityName.m */,
+				84F7E28F1B1A3CCC00F7016B /* MyHelperWithCoordinates.h */,
+				84F7E2901B1A3CCC00F7016B /* MyHelperWithCoordinates.m */,
+				84F7E2921B1A400100F7016B /* MyCleanerDatabase.h */,
+				84F7E2931B1A400100F7016B /* MyCleanerDatabase.m */,
+			);
+			name = "Helpers with DB";
+			sourceTree = "<group>";
+		};
+		84F7E2881B1A347900F7016B /* subclasses of HelperWithDB */ = {
 			isa = PBXGroup;
 			children = (
 				849AA1D21B0A5B3B00F8A097 /* HelperWithDatabase.h */,
 				849AA1D31B0A5B3B00F8A097 /* HelperWithDatabase.m */,
+				84F7E27F1B1A241A00F7016B /* HelperWithCity.h */,
+				84F7E2801B1A241A00F7016B /* HelperWithCity.m */,
+				84F7E2821B1A262600F7016B /* HelperWithCityName.h */,
+				84F7E2831B1A262600F7016B /* HelperWithCityName.m */,
+				84F7E2851B1A29F800F7016B /* HelperWithCoordinates.h */,
+				84F7E2861B1A29F800F7016B /* HelperWithCoordinates.m */,
 			);
-			name = Helpers;
+			name = "subclasses of HelperWithDB";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,8 +422,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F7E2811B1A241A00F7016B /* HelperWithCity.m in Sources */,
+				84F7E28E1B1A39F900F7016B /* MyHelperWithCityName.m in Sources */,
 				845DE9451AFA87080036C1E2 /* RequestManager.m in Sources */,
+				84F7E2941B1A400100F7016B /* MyCleanerDatabase.m in Sources */,
 				8485E3631AF92D4800D59A71 /* Weather.xcdatamodeld in Sources */,
+				84F7E2841B1A262600F7016B /* HelperWithCityName.m in Sources */,
 				8438DC9A1B04D9E700FE6F5C /* Forecast+Creating.m in Sources */,
 				8485E3601AF92D4800D59A71 /* AppDelegate.m in Sources */,
 				8438DCA91B04FD2700FE6F5C /* City.m in Sources */,
@@ -388,6 +435,9 @@
 				848E33011B037519000D7A23 /* MainViewController.m in Sources */,
 				848E33111B038C5F000D7A23 /* CityInfoTableViewCell.m in Sources */,
 				849AA1D41B0A5B3B00F8A097 /* HelperWithDatabase.m in Sources */,
+				84F7E28B1B1A354700F7016B /* MyHelperWithCity.m in Sources */,
+				84F7E2871B1A29F800F7016B /* HelperWithCoordinates.m in Sources */,
+				84F7E2911B1A3CCC00F7016B /* MyHelperWithCoordinates.m in Sources */,
 				848E330E1B0383E7000D7A23 /* WeatherForecastTableViewCell.m in Sources */,
 				8438DC9D1B04DA0200FE6F5C /* City+Creating.m in Sources */,
 				8438DCAC1B04FD2800FE6F5C /* Forecast.m in Sources */,

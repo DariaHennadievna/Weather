@@ -61,7 +61,7 @@
 
 #pragma mark - Get City Methods
 
-- (City *)gettingCity
+- (City *)gettingCity // by name
 {
     City *returningCity;
     NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
@@ -95,7 +95,7 @@
     return myCity;
 }
 
-- (City *)gettingCityWithCoordinates
+- (City *)gettingCityWithCoordinates // by coordinates
 {
     City *returningCity;
     NSArray *separatedLat = [[self.latitude mutableCopy] componentsSeparatedByString:@"." ];
@@ -135,7 +135,7 @@
 
 #pragma mark - Get Forecasts Methods
 
-- (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity
+- (NSArray *)gettingOrderredArrayWithForecastsByValueDateForCity:(City *)myCity // by city +++
 {
     NSMutableArray *arrayWithSixForecasts = [[NSMutableArray alloc] init];
     NSMutableArray *arrayWithAllForecasts = [[NSMutableArray alloc] init];
@@ -168,7 +168,7 @@
 
 #pragma mark - Check Database Methods
 
-- (BOOL)checkTheDatabaseForCity:(City *)city
+- (BOOL)checkTheDatabaseForCity:(City *)city // by city +++
 {
     // If there is the City in database, I will not send my Request. I'll use the data from the database.
     BOOL isCityInDatabase = NO;
@@ -208,7 +208,7 @@
     }
 }
 
-- (BOOL)checkTheDatabaseForCityWithName
+- (BOOL)checkTheDatabaseForCityWithName // by name
 {
     // If there is the City in database, I will not send my Request. I'll use the data from the database.
     BOOL isCityInDatabase = NO;
@@ -251,7 +251,7 @@
     }
 }
 
-- (BOOL)checkTheDatabaseForCoordinates
+- (BOOL)checkTheDatabaseForCoordinates // by coordinates
 {
     BOOL isCityInDatabase = NO;
     BOOL isForecastsForCity = NO;
@@ -307,7 +307,7 @@
     }
 }
 
-- (void)checkTheDatabaseForOutdatedForecastDataForCity
+- (void)checkTheDatabaseForOutdatedForecastDataForCity // by city +++
 {
     //NSLog(@"Проверим БД на наличие старых прогнозов");
     NSArray *cities = [[NSArray alloc] init];
