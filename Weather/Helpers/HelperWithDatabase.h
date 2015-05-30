@@ -26,6 +26,8 @@
 - (instancetype)initWithCityName:(NSString *)name;
 - (instancetype)initWithCity:(City *)city;
 - (instancetype)initWithLatitude:(NSString *)lat andLongitude:(NSString *)lon;
+- (instancetype)init;
+
 
 // Get City Methods
 - (City *)gettingCity;

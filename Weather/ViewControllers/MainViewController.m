@@ -50,7 +50,8 @@
     [self startGetLocation];
     
     // if I want, I can delete all cities and forecasts for them from the database...
-    //[self deleteAllCitiesFromDatabase];
+    HelperWithDatabase *helper = [[HelperWithDatabase alloc] init];
+    [helper deleteAllCitiesFromDatabase];
 }
 
 

@@ -49,6 +49,15 @@
     return self;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self)
+    {
+        
+    }
+    return self;
+}
 
 #pragma mark - Get City Methods
 
