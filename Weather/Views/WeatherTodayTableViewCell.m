@@ -46,6 +46,7 @@
     
     self.temperature = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 30.0f, 250.0f, 50.0f)];
     self.temperature.font = [UIFont systemFontOfSize:50];
+    self.temperature.textAlignment = NSTextAlignmentCenter;
     [self.temperature setFont:[UIFont boldSystemFontOfSize:45]];
     [self addSubview:self.temperature];
 }

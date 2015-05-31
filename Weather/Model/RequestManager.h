@@ -22,14 +22,16 @@ typedef void (^WeatherAPICallback)(NSError* error, NSDictionary *result);
 @property (strong, nonatomic) NSString *keyParamForSearch;
 @property (strong, nonatomic) NSString *countOfDays;
 @property (nonatomic) NSDictionary *coordinates;
+@property (nonatomic) NSString *lang;
 
 // Init Methods
 - (instancetype)initWithCity:(NSString *)nameOfCity forDays:(NSString *)days;
 - (instancetype)initWithCoordinates:(NSDictionary *)coordinates forDays:(NSString *)days;
 
 // NSURL Request Methods
-- (NSURL *)generatingRequestURL;
-- (NSURL *)generatingRequestURLWithCordinates;
+- (NSURL *)generationRequestURLWithParameters:(NSDictionary *)param;
+- (void)currentWeatherByCityName;
+- (void)currentWeatherByCoordinates;
 
 // AFNetworking Request Methods
 - (void)callMethodWithParam:(NSDictionary *)parameters andCallback:(WeatherAPICallback)callback;

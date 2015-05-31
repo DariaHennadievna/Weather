@@ -54,6 +54,10 @@
     NSMutableString *request = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
     [request appendString:@"?"];
     
+   //NSString *str = [request stringByAppendingString:parameters];
+    NSLog(@"%@", request);
+    NSLog(@"%@", parameters);
+    
     [manager GET:[request copy] parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
          //NSLog(@"JSON: %@", responseObject);
         callback(nil, responseObject);
@@ -80,15 +84,11 @@
 
 #pragma mark - NSURL Request Methods
 
--(NSURL *)generatingRequestURLWithCordinates
+- (NSURL *)generationRequestURLWithParameters:(NSDictionary *)param
 {
-    NSDictionary *keyParams = self.coordinates;
+    NSDictionary *keyParams = [param copy];
     NSMutableString *requestURL = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
     [requestURL appendString:@"?"];
-    
-    NSMutableDictionary *temp = [keyParams mutableCopy];
-    [temp addEntriesFromDictionary:self.additionalParams];
-    keyParams = temp;
     
     NSMutableArray *keyValues = [[NSMutableArray alloc] init];
     for (NSString *key in keyParams)
@@ -103,39 +103,16 @@
     return [NSURL URLWithString:requestURL];
 }
 
-- (NSURL *)generatingRequestURL
+- (void)currentWeatherByCityName
 {
-    if (!self.keyParamForSearch.length)
-    {
-        return nil;
-    }
-    
-    NSString *newParamForSearch = [[self.keyParamForSearch copy] stringByAddingPercentEscapesUsingEncoding:
-                                                                                     NSUTF8StringEncoding];
-    NSDictionary *keyParams = @{@"q":newParamForSearch,
-                                @"cnt":self.countOfDays};
-    if (keyParams.allKeys.count)
-    {
-        NSMutableDictionary *temp = [keyParams mutableCopy];
-        [temp addEntriesFromDictionary:self.additionalParams];
-        keyParams = temp;
-    }
-    else
-    {
-        keyParams = self.additionalParams;
-    }
-    
-    NSMutableString *requestURL = [[WEATHER_BASE_URL stringByAppendingString:TYPE_OF_REQUEST] mutableCopy];
-    [requestURL appendString:@"?"];
-    NSMutableArray *keyValues = [[NSMutableArray alloc] init];
-    for (NSString *key in keyParams)
-    {
-        id value = [keyParams objectForKey:key];
-        NSString *keyValue = [NSString stringWithFormat:@"%@=%@", key, value];
-        [keyValues addObject:keyValue];
-    }
-    [requestURL appendString:[keyValues componentsJoinedByString:@"&"]];
-    return [NSURL URLWithString:requestURL];
+    NSDictionary *params = [self gettingParamWithNameOfCity];
+    [self generationRequestURLWithParameters:params];
+}
+
+- (void)currentWeatherByCoordinates
+{
+    NSDictionary *params = [self gettingParamWithCoordinates];
+    [self generationRequestURLWithParameters:params];
 }
 
 
@@ -154,9 +131,14 @@
 
 -(NSDictionary *)gettingParamWithNameOfCity
 {
-    NSString *newParamForSearch = [[self.keyParamForSearch copy] stringByAddingPercentEscapesUsingEncoding:
-                                                                                      NSUTF8StringEncoding];
-    NSDictionary *keyParams = @{@"q":newParamForSearch};
+    NSString *newParamForSearch;
+    
+    newParamForSearch = [[self.keyParamForSearch copy] stringByAddingPercentEscapesUsingEncoding:
+                                   NSUTF8StringEncoding];
+    
+    NSDictionary *keyParams = nil;
+    keyParams = @{@"q":self.keyParamForSearch};
+    
     NSDictionary *cntParam = @{@"cnt":self.countOfDays};
     NSMutableDictionary *temp = [keyParams mutableCopy];
     [temp addEntriesFromDictionary:self.additionalParams];
@@ -170,7 +152,7 @@
     NSMutableDictionary *additionalParams = [NSMutableDictionary new];
     [additionalParams addEntriesFromDictionary:self.authParams];
     [additionalParams addEntriesFromDictionary:self.userDefinedParams];
-    NSLog(@"%@", additionalParams);
+    //NSLog(@"%@", additionalParams);
     return additionalParams;
 }
 
@@ -181,7 +163,9 @@
 
 - (NSDictionary *)userDefinedParams
 {
-    return @{@"lang":@"en", @"units":@"metric",@"mode":@"json"};
+    NSString *lang = NSLocalizedString(@"lang", nil);
+    self.lang = NSLocalizedString(@"lang", nil);
+    return @{@"lang":lang, @"units":@"metric",@"mode":@"json"};
 }
 
 @end

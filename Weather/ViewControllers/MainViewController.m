@@ -24,6 +24,7 @@
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSString *currentLatitude;
 @property (nonatomic) NSString *currentLongitude;
+@property (nonatomic) NSString *lang;
 
 @end
 
@@ -45,9 +46,12 @@
     [self.tableView registerClass:[WeatherForecastTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([WeatherForecastTableViewCell class])];
     
+    self.lang = NSLocalizedString(@"lang", nil);
+    
     NSDate *date = [NSDate date];
     self.todayIsDate = date;
     [self startGetLocation];
+
     
     // if I want, I can delete all cities and forecasts for them from the database...
     //MyCleanerDatabase *cleaner = [[MyCleanerDatabase alloc] initCleaner];
@@ -230,26 +234,10 @@
             Forecast *forecastForToday = [self configureForWeatherTodayTableViewCell];
             
             weatherTodayTableCell.todayIs.text = [self gettingStringWithDate:self.todayIsDate];
-            NSString *strTempMin;
-            NSString *strTempMax;
-            if (forecastForToday.tempMin.length> 4)
-            {
-                strTempMin = [forecastForToday.tempMin substringToIndex:4];
-            }
-            else
-            {
-                strTempMin = forecastForToday.tempMin;
-            }
-            
-            if (forecastForToday.tempMax.length> 4)
-            {
-                strTempMax = [forecastForToday.tempMax substringToIndex:4];
-            }
-            else
-            {
-                strTempMax = forecastForToday.tempMax;
-            }
-            weatherTodayTableCell.temperature.text = [NSString stringWithFormat:@"%@-%@ºC",
+            NSString *strTempMin = [self separatingString:forecastForToday.tempMin];
+            NSString *strTempMax = [self separatingString:forecastForToday.tempMax];
+        
+            weatherTodayTableCell.temperature.text = [NSString stringWithFormat:@"%@... %@ºC",
                                                                     strTempMin, strTempMax];
             NSString *nameForIcon = [forecastForToday.icon stringByAppendingString:@".png"];
             weatherTodayTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
@@ -269,26 +257,9 @@
             NSString *strDate = [self gettingStringWithDate:date];
             weatherForecastTableCell.date.text = strDate;
             
-            NSString *strTempMin;
-            NSString *strTempMax;
-            if (forecastFromArray.tempMin.length> 4)
-            {
-                strTempMin = [forecastFromArray.tempMin substringToIndex:4];
-            }
-            else
-            {
-                strTempMin = forecastFromArray.tempMin;
-            }
-            
-            if (forecastFromArray.tempMax.length> 4)
-            {
-                strTempMax = [forecastFromArray.tempMax substringToIndex:4];
-            }
-            else
-            {
-                strTempMax = forecastFromArray.tempMax;
-            }
-            weatherForecastTableCell.temperature.text = [NSString stringWithFormat:@"%@-%@ºC",
+            NSString *strTempMin = [self separatingString:forecastFromArray.tempMin];
+            NSString *strTempMax = [self separatingString:forecastFromArray.tempMax];
+            weatherForecastTableCell.temperature.text = [NSString stringWithFormat:@"%@... %@ºC",
                                                                        strTempMin, strTempMax];
             NSString *nameForIcon = [forecastFromArray.icon stringByAppendingString:@".png"];
             weatherForecastTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
@@ -434,8 +405,20 @@
 - (void)startSearch
 {
     BOOL isDataInDatabase;
-    NSString *nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+    NSString *nameValue;
+    //if ([self.lang isEqualToString:@"en"])
+    //{
+        //NSLog(@"Английский ");
+        nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                                                             NSUTF8StringEncoding];
+    //}
+    //else if ([self.lang isEqualToString:@"ru"])
+    //{
+        //NSLog(@"Русский ");
+        //NSData *data = [NSData dataWithC];
+        //nameValue = [[NSString alloc] initWithData:data encoding:NSWindowsCP1251StringEncoding];
+
+    //}
 //    HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCityName:nameValue];
     MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:nameValue];
     City *currCity = [helperWithName gettingCity];
@@ -455,6 +438,7 @@
     else
     {
         // NSLog(@"I need new data for this city");
+        NSLog(@"Name of searching city = %@", nameValue);
         RequestManager *myRequestManager = [[RequestManager alloc] initWithCity:nameValue forDays:@"10"];
         [myRequestManager currentWeatherByCityNameWithCallback:^(NSError *error, NSDictionary *result) {
             if (error)
@@ -515,6 +499,15 @@
     [myForecasts removeObjectAtIndex:0];
     NSMutableArray *weatherForecast = myForecasts;
     return weatherForecast;
+}
+
+- (NSString *)separatingString:(NSString *)string
+{
+    NSArray *arrayOfStrings = nil;
+    
+    arrayOfStrings = [[string mutableCopy] componentsSeparatedByString:@"."];
+    NSString *newString = [arrayOfStrings firstObject];
+    return newString;
 }
 
 
