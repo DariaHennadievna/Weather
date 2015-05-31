@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "City+Creating.h"
 #import "Forecast+Creating.h"
+#import "MyHelperWithCity.h"
 
 @interface MyCleanerDatabase : NSObject
 
@@ -20,5 +21,6 @@
 
 // Delete Data From Database Methods
 - (void) deleteAllCitiesFromDatabase;
+- (void)deleteOutdatedForecastsForEveryCityInDatabase;
 
 @end

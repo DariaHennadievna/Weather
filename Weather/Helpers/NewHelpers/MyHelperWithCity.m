@@ -97,14 +97,14 @@
     }
 }
 
-- (void)checkTheDatabaseForOutdatedForecastDataForCity // by city
+- (void)checkTheDatabaseForOutdatedForecastDataForCity:(City *)city // by city
 {
     //NSLog(@"Проверим БД на наличие старых прогнозов");
     NSArray *cities = [[NSArray alloc] init];
-    cities = [self.city.forecasts copy];
+    cities = [city.forecasts copy];
     NSInteger const diff = -86400;
     
-    if (self.city.forecasts.count)
+    if (city.forecasts.count)
     {
         for (Forecast *myForecast in cities)
         {
@@ -136,6 +136,26 @@
             }
         }
     }
+}
+
+- (void)deleteOutdatedForecastsForEveryCityInDatabase
+{
+    NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    
+    if (allCities.count)
+    {
+        for (City *myCity in allCities)
+        {
+            if (myCity.forecasts.count)
+            {
+                [self checkTheDatabaseForOutdatedForecastDataForCity:myCity];
+            }
+            
+        }
+    }
+    
 }
 
 

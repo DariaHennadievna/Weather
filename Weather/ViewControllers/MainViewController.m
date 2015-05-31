@@ -50,8 +50,12 @@
     
     NSDate *date = [NSDate date];
     self.todayIsDate = date;
+    
+    // при открытии проверяю каждый кород в базе данных на устаревшие данные о прогнозе погоды
+    MyCleanerDatabase *cleaner = [[MyCleanerDatabase alloc] initCleaner];
+    [cleaner deleteOutdatedForecastsForEveryCityInDatabase];
+    
     [self startGetLocation];
-
     
     // if I want, I can delete all cities and forecasts for them from the database...
     //MyCleanerDatabase *cleaner = [[MyCleanerDatabase alloc] initCleaner];
@@ -148,7 +152,7 @@
     if (currCity)
     {
         MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currCity];
-        [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+        [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:currCity];
         isDataInDatabase = [helperWithCity checkTheDatabaseForCity:currCity];
     }
     
@@ -335,7 +339,7 @@
     City *currentCity = [helperWithCityName gettingCity];
     //HelperWithDatabase *helper = [[HelperWithDatabase alloc] initWithCity:currentCity];
     MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currentCity];
-    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:self.currentCity];
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
     
     [self loadDate];
@@ -356,7 +360,7 @@
     
     //HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:currentCity];
     MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currentCity];
-    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:self.currentCity];
     
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
 }
@@ -375,7 +379,7 @@
     
 //    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
     MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:self.currentCity];
-    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:self.currentCity];
     //[helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
     
     NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
@@ -394,7 +398,7 @@
     
 //    HelperWithDatabase *helperWithCity = [[HelperWithDatabase alloc] initWithCity:self.currentCity];
     MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:self.currentCity];
-    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+    [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:self.currentCity];
     NSArray *myForecasts = [helperWithCity gettingOrderredArrayWithForecastsByValueDateForCity:self.currentCity];
     self.forecastsForUI = myForecasts;
 }
@@ -425,7 +429,7 @@
     if (currCity)
     {
         MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currCity];
-        [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity];
+        [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:currCity];
         isDataInDatabase = [helperWithName checkTheDatabaseForCityWithName];
     }
     
@@ -527,6 +531,5 @@
         }
     }
 }
-
 
 @end

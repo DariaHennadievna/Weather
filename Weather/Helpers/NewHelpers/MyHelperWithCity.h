@@ -26,7 +26,8 @@
 
 // Check Database Methods
 - (BOOL)checkTheDatabaseForCity:(City *)city;
-- (void)checkTheDatabaseForOutdatedForecastDataForCity;
+- (void)checkTheDatabaseForOutdatedForecastDataForCity:(City *)city;
+//- (void)deleteOutdatedForecastsForEveryCityInDatabase;
 
 
 @end

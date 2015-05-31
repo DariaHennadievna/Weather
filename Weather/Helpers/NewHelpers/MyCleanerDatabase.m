@@ -45,4 +45,25 @@
     }
 }
 
+- (void)deleteOutdatedForecastsForEveryCityInDatabase
+{
+    NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
+    NSArray *allCities = [context executeFetchRequest:request error:nil];
+    
+    if (allCities.count)
+    {
+        for (City *myCity in allCities)
+        {
+            if (myCity.forecasts.count)
+            {
+                MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:myCity];
+                [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:myCity];
+            }
+            
+        }
+    }
+    
+}
+
 @end
