@@ -66,6 +66,7 @@
     // If there is the City in database, I will not send my Request. I'll use the data from the database.
     BOOL isCityInDatabase = NO;
     BOOL isForecastsForCity = NO;
+    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
@@ -83,7 +84,7 @@
                 if (myCity.forecasts.count > MIN_COUNT_FORECAST_IN_DATABASE)
                 {
                     isForecastsForCity = YES;
-                    //NSLog(@"There is %lu forecasts for thih city.", myCity.forecasts.count);
+                    //NSLog(@"There is %lu forecasts for this city.", myCity.forecasts.count);
                 }
                 //break;
             }
