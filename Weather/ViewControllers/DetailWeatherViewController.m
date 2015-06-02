@@ -34,6 +34,7 @@
     self.tempEvening.textColor = [[UIColor blueColor] colorWithAlphaComponent:0.5f];
     self.tempNight.font = [UIFont systemFontOfSize:25];
     self.tempNight.textColor = [[UIColor blueColor] colorWithAlphaComponent:0.5f];
+        
 }
 
 - (NSString *)separatingString:(NSString *)string

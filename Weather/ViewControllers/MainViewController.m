@@ -24,7 +24,6 @@
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSString *cityByCoordinates;
 @property (nonatomic) NSString *lang;
-@property (nonatomic) NSTimeInterval timeInterval;
 
 @end
 
@@ -46,21 +45,14 @@
     [self.tableView registerClass:[WeatherForecastTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([WeatherForecastTableViewCell class])];
     
+    // текущий язык
     self.lang = NSLocalizedString(@"lang", nil);
-    
-    // date
+   
+    // дата
     NSDate *date = [NSDate date];
-    self.timeInterval = [date timeIntervalSince1970];
-    
-    Float64 myfloat= self.timeInterval;
-   // NSNumber *numb = [myfloat ]
-    //NSLog(@"сиводня есть %f", myfloat);
-    NSInteger intValue = (NSInteger) roundf(myfloat);
-    NSLog(@"!!! сиводня есть %ld", (long)intValue);
-    
     self.todayIsDate = date;
     
-    // при открытии проверяю каждый кород в базе данных на устаревшие данные о прогнозе погоды
+    // при открытии проверяю каждый кород в базе данных на устаревшие (по дате) данные о прогнозе погоды
     MyCleanerDatabase *cleaner = [[MyCleanerDatabase alloc] initCleaner];
     [cleaner deleteOutdatedForecastsForEveryCityInDatabase];
     
@@ -157,14 +149,19 @@
          if(placemarks.count > 0)
          {
              CLPlacemark *placemark = [placemarks objectAtIndex:0];
+             // получаю город по данным локации
              NSString *city = placemark.locality;
              NSLog(@"Я ЕСТЬ ТУТ -> %@", city);
              if ([self.lang isEqualToString:@"en"])
              {
                  self.cityByCoordinates = city;
              }
-             self.cityByCoordinates = [self translatorForRussianText:city];
-             [self startSearchForFirstCall];
+             else
+             {
+                 self.cityByCoordinates = [self translatorForRussianText:city];
+             }
+             
+             [self startSearchForFirstCall];// --->
          }
      }];
 }
@@ -272,7 +269,6 @@
                                                                     strTempMin, strTempMax];
             NSString *nameForIcon = [forecastForToday.icon stringByAppendingString:@".png"];
             weatherTodayTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
-            NSLog(@"Citi last update %@", forecastForToday.dateOfLastUpdate);
         }
         
         return weatherTodayTableCell;
@@ -366,8 +362,10 @@
         newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                           NSUTF8StringEncoding];
     }
-    
-    newRequestWord = [self translatorForRussianText:self.requestCity.text];
+    else
+    {
+        newRequestWord = [self translatorForRussianText:self.requestCity.text];
+    }
     
     
     MyHelperWithCityName *helperWithCityName = [[MyHelperWithCityName alloc] initWithCityName:newRequestWord];
@@ -399,15 +397,6 @@
 
 - (void)loadDataFromDatabaseForFirstCall
 {
-    /*NSString *newStrByCoord = nil;
-    if ([self.lang isEqualToString:@"en"])
-    {
-        newStrByCoord = self.cityByCoordinates;
-    }
-    
-    newStrByCoord = [self translatorForRussianText:self.cityByCoordinates];
-    */
-    
     MyHelperWithCityName *helperWithCityName = [[MyHelperWithCityName alloc] initWithCityName:self.cityByCoordinates];
     City *myCurrentCity = [helperWithCityName gettingCity];
     self.currentCity = myCurrentCity;
@@ -428,8 +417,11 @@
         newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                     NSUTF8StringEncoding];
     }
-    
-    newRequestWord = [self translatorForRussianText:self.requestCity.text];
+    else
+    {
+        // перевожу в транслит...
+        newRequestWord = [self translatorForRussianText:self.requestCity.text];
+    }
     
     
     MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:newRequestWord];
@@ -455,8 +447,11 @@
         nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                                                             NSUTF8StringEncoding];
     }
-    
-    nameValue = [self translatorForRussianText:self.requestCity.text];
+    else
+    {
+        // перевожу в транслит...
+        nameValue = [self translatorForRussianText:self.requestCity.text];
+    }
     
     MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:nameValue];
     City *currCity = [helperWithName gettingCity];
@@ -554,9 +549,10 @@
     NSMutableString *russianLang = [russianText mutableCopy];
     CFMutableStringRef russianLangRef = (__bridge CFMutableStringRef)russianLang;
     CFStringTransform(russianLangRef, NULL, kCFStringTransformToLatin, false);
-    NSLog(@"Транслит  = %@", russianLang); // outputs "russkij âzyk"
+    NSLog(@"Транслит  = %@", russianLang);
     return [russianLang copy];
 }
+
 
 #pragma mark - Navigation
 

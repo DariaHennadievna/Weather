@@ -167,8 +167,9 @@
     }
     
     return isIrrelevantData;
-    
 }
+
+#pragma mark - Helpers Method
 
 - (NSNumber *)gettingTimeInterval
 {
