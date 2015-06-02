@@ -138,27 +138,48 @@
     }
 }
 
-- (void)deleteOutdatedForecastsForEveryCityInDatabase
+- (BOOL)checkTheDatabaseForIrrelevantData
 {
-    NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:NSStringFromClass([City class])];
-    NSArray *allCities = [context executeFetchRequest:request error:nil];
-    
-    if (allCities.count)
+    BOOL isIrrelevantData = NO;
+    NSArray *myForecasts = [[NSArray alloc] init];
+    myForecasts = [self.city.forecasts copy];
+    for (Forecast *myForecast in myForecasts)
     {
-        for (City *myCity in allCities)
+        NSInteger const diff = 10800;
+    
+        NSNumber *timeIntervalIsNow = nil;
+        timeIntervalIsNow = [self gettingTimeInterval];
+        NSInteger intervalIsNow = [timeIntervalIsNow integerValue];
+        NSInteger lastUpdateInterval = [myForecast.dateOfLastUpdate integerValue];
+        NSInteger diffrent = intervalIsNow - lastUpdateInterval;
+        NSLog(@"INTERVAL = %ld", (long)diffrent);
+        if (diffrent >= diff)
         {
-            if (myCity.forecasts.count)
-            {
-                [self checkTheDatabaseForOutdatedForecastDataForCity:myCity];
-            }
-            
+            //NSLog(@"Data is irrelevant!!");
+            isIrrelevantData = YES;
+            break;
+        }
+        else
+        {
+            //NSLog(@"Data is okey!!");
+            break;
         }
     }
     
+    return isIrrelevantData;
+    
 }
 
-
+- (NSNumber *)gettingTimeInterval
+{
+    NSDate *myDate = nil;
+    myDate = [NSDate date];
+    NSTimeInterval tmInterval = [myDate timeIntervalSince1970];
+    Float64 myfloat= tmInterval;
+    NSInteger intValue = (NSInteger) roundf(myfloat);
+    NSNumber *currentTimeInterval = [NSNumber numberWithInteger:intValue];
+    return currentTimeInterval;
+}
 
 
 @end

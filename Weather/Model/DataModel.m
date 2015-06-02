@@ -81,9 +81,15 @@
     for (NSDictionary *object in listOfForecasts)
     {
         NSDictionary *forecastForOneDay = [self forDayWeatherInfo:[object mutableCopy]];
-        [forecastDaily addObject:forecastForOneDay];
+        NSNumber *dateByInterval = [self gettingTimeInterval];
+        NSDictionary *myNDictWithLastUpdate = @{LAST_UPDATE:dateByInterval};
+        NSMutableDictionary *forecastForOneDayWithLastUpdate = [forecastForOneDay mutableCopy];
+        [forecastForOneDayWithLastUpdate addEntriesFromDictionary:myNDictWithLastUpdate];
+        
+        [forecastDaily addObject:forecastForOneDayWithLastUpdate];
     }
     
+    NSLog(@"new forecast %@", forecastDaily);
     return [forecastDaily copy];
 }
 
@@ -149,52 +155,25 @@
 
 #pragma mark - Save Forecast
 
+
 - (void)savingForecastData:(NSArray *)data forCity:(City *)city
 {
-    BOOL isForecastInDatabase = NO;
-    for (NSDictionary *dataForDay in data)
+    NSArray *myForecasts = [city.forecasts copy];
+    NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
+    // delete all irrelevant forecasts
+    for (Forecast *myForecast in myForecasts)
     {
-        //NSLog(@"Количество прогнозов для этого города сшставляет %lu штук", city.forecasts.count);
-        if (city.forecasts.count)
+        [context deleteObject:myForecast];
+        [self.appDelegate saveContext];
+    }
+    
+    if (!city.forecasts.count)
+    {
+       // NSLog(@"ГОРОД ПУСТ");
+        for (NSDictionary *forecastForDay in data)
         {
-            NSLog(@"Count of city.forecasts is %lu", city.forecasts.count);
-            for (Forecast *myForecast in city.forecasts)
-            {
-                if ([[dataForDay objectForKey:DATE] isEqualToNumber:myForecast.date])
-                {
-                    isForecastInDatabase = YES;
-                    //NSLog(@"Есть такой прогноз");
-                }
-            }
-            
-            if (!isForecastInDatabase)
-            {
-                //NSLog(@"Нет такого прогноза. Сохраним иво.");
-                Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay forCity:city];
-                [city addForecastsObject:newForecast];
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                NSManagedObjectContext *context = appDelegate.managedObjectContext;
-                
-                NSError *error = nil;
-                if (![context save:&error])
-                {
-                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                    abort();
-                }
-            }
-            else
-            {
-                isForecastInDatabase = NO;
-                //NSLog(@"Не будем сохранять этот прогноз.");
-            }
-        }
-        else
-        {
-            //NSLog(@"Вообще нет никаких прогнозов.");
-            NSManagedObjectContext *context = self.appDelegate.managedObjectContext;
-            Forecast *newForecast = (Forecast *)[Forecast forecastWithData:dataForDay forCity:city];
+            Forecast *newForecast = (Forecast *)[Forecast forecastWithData:forecastForDay forCity:city];
             [city addForecastsObject:newForecast];
-            //NSLog(@"Количество прогнозов %lu ", city.forecasts.count);
             
             NSError *error = nil;
             if (![context save:&error])
@@ -202,10 +181,15 @@
                 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
                 abort();
             }
+
         }
     }
+    else
+    {
+        // NSLog(@"Что-то непонятное произошло... Не все прогнозы удалились 0_о");
+    }
+    
 }
-
 
 #pragma mark - Helper Methods
 
@@ -241,6 +225,17 @@
     [forecastForDay addEntriesFromDictionary:temp];
     [forecastForDay addEntriesFromDictionary:weather];
     return [forecastForDay copy];
+}
+
+- (NSNumber *)gettingTimeInterval
+{
+    NSDate *myDate = nil;
+    myDate = [NSDate date];
+    NSTimeInterval tmInterval = [myDate timeIntervalSince1970];
+    Float64 myfloat= tmInterval;
+    NSInteger intValue = (NSInteger) roundf(myfloat);
+    NSNumber *currentTimeInterval = [NSNumber numberWithInteger:intValue];
+    return currentTimeInterval;
 }
 
 @end

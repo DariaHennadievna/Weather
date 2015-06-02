@@ -131,11 +131,6 @@
 
 -(NSDictionary *)gettingParamWithNameOfCity
 {
-    NSString *newParamForSearch;
-    
-    newParamForSearch = [[self.keyParamForSearch copy] stringByAddingPercentEscapesUsingEncoding:
-                                   NSUTF8StringEncoding];
-    
     NSDictionary *keyParams = nil;
     keyParams = @{@"q":self.keyParamForSearch};
     

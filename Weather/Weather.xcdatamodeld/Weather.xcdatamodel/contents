@@ -11,6 +11,7 @@
     <entity name="Forecast" representedClassName="Forecast" syncable="YES">
         <attribute name="clouds" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="dateOfLastUpdate" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="humidity" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pressure" optional="YES" attributeType="String" syncable="YES"/>
@@ -28,6 +29,6 @@
     </entity>
     <elements>
         <element name="City" positionX="-333" positionY="-18" width="128" height="133"/>
-        <element name="Forecast" positionX="-63" positionY="-18" width="128" height="283"/>
+        <element name="Forecast" positionX="-63" positionY="-18" width="128" height="300"/>
     </elements>
 </model>

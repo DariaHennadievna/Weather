@@ -24,6 +24,7 @@
 #define WEATHER_STATUS @"description"
 #define WEATHER_ID     @"id"
 #define DATE           @"dt"
+#define LAST_UPDATE    @"lastUpdate"
 #define ICON           @"icon"
 
 

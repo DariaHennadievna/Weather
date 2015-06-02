@@ -22,10 +22,9 @@
 @property (nonatomic) Forecast *currentForecast;
 
 @property (nonatomic) CLLocationManager *locationManager;
-@property (nonatomic) NSString *currentLatitude;
-@property (nonatomic) NSString *currentLongitude;
 @property (nonatomic) NSString *cityByCoordinates;
 @property (nonatomic) NSString *lang;
+@property (nonatomic) NSTimeInterval timeInterval;
 
 @end
 
@@ -49,13 +48,23 @@
     
     self.lang = NSLocalizedString(@"lang", nil);
     
+    // date
     NSDate *date = [NSDate date];
+    self.timeInterval = [date timeIntervalSince1970];
+    
+    Float64 myfloat= self.timeInterval;
+   // NSNumber *numb = [myfloat ]
+    //NSLog(@"сиводня есть %f", myfloat);
+    NSInteger intValue = (NSInteger) roundf(myfloat);
+    NSLog(@"!!! сиводня есть %ld", (long)intValue);
+    
     self.todayIsDate = date;
     
     // при открытии проверяю каждый кород в базе данных на устаревшие данные о прогнозе погоды
     MyCleanerDatabase *cleaner = [[MyCleanerDatabase alloc] initCleaner];
     [cleaner deleteOutdatedForecastsForEveryCityInDatabase];
     
+    // Start Get Location
     [self startGetLocation];
     
     // if I want, I can delete all cities and forecasts for them from the database...
@@ -138,9 +147,6 @@
         [self.locationManager stopUpdatingLocation];
     }
     
-    self.currentLongitude = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
-    self.currentLatitude  = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
-    
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
          if (error)
@@ -152,8 +158,12 @@
          {
              CLPlacemark *placemark = [placemarks objectAtIndex:0];
              NSString *city = placemark.locality;
-             //NSLog(@"!!!!!city: %@", city);
-             self.cityByCoordinates = city;
+             NSLog(@"Я ЕСТЬ ТУТ -> %@", city);
+             if ([self.lang isEqualToString:@"en"])
+             {
+                 self.cityByCoordinates = city;
+             }
+             self.cityByCoordinates = [self translatorForRussianText:city];
              [self startSearchForFirstCall];
          }
      }];
@@ -161,17 +171,21 @@
 
 - (void)startSearchForFirstCall
 {
-    BOOL isDataInDatabase;
+    BOOL isDataInDatabase = NO;
+    BOOL isIrrelevantData = NO;
+    
     MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:self.cityByCoordinates];
     City *currCity = [helperWithName gettingCity];
+    
     if (currCity)
     {
         MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currCity];
         [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:currCity];
+        isIrrelevantData = [helperWithCity checkTheDatabaseForIrrelevantData];
         isDataInDatabase = [helperWithName checkTheDatabaseForCityWithName];
     }
     
-    if (isDataInDatabase)
+    if (isDataInDatabase && !isIrrelevantData)
     {
          NSLog(@"Start search in Database");
         [self loadDataFromDatabaseForFirstCall];
@@ -220,7 +234,8 @@
         if(!forecastsForCurrentCity)
         {
             return 5;
-        }        
+        }
+        
         return forecastsForCurrentCity.count;
     }
 }
@@ -257,6 +272,7 @@
                                                                     strTempMin, strTempMax];
             NSString *nameForIcon = [forecastForToday.icon stringByAppendingString:@".png"];
             weatherTodayTableCell.weatherStatus.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:nameForIcon]];
+            NSLog(@"Citi last update %@", forecastForToday.dateOfLastUpdate);
         }
         
         return weatherTodayTableCell;
@@ -344,8 +360,15 @@
     NSDictionary *newCityData = [self.dataModel gettingCityInfo];
     [self.dataModel savingCityData:newCityData];
     NSArray *newWeatherData = [self.dataModel gettingWeatherForecastInfo];
-    NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
-                                                                    NSUTF8StringEncoding];
+    NSString *newRequestWord = nil;
+    if ([self.lang isEqualToString:@"en"])
+    {
+        newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+                          NSUTF8StringEncoding];
+    }
+    
+    newRequestWord = [self translatorForRussianText:self.requestCity.text];
+    
     
     MyHelperWithCityName *helperWithCityName = [[MyHelperWithCityName alloc] initWithCityName:newRequestWord];
     City *currentCity = [helperWithCityName gettingCity];
@@ -371,12 +394,20 @@
     
     MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currentCity];
     [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:self.currentCity];
-    
     [self.dataModel savingForecastData:newWeatherData forCity:currentCity];
 }
 
 - (void)loadDataFromDatabaseForFirstCall
 {
+    /*NSString *newStrByCoord = nil;
+    if ([self.lang isEqualToString:@"en"])
+    {
+        newStrByCoord = self.cityByCoordinates;
+    }
+    
+    newStrByCoord = [self translatorForRussianText:self.cityByCoordinates];
+    */
+    
     MyHelperWithCityName *helperWithCityName = [[MyHelperWithCityName alloc] initWithCityName:self.cityByCoordinates];
     City *myCurrentCity = [helperWithCityName gettingCity];
     self.currentCity = myCurrentCity;
@@ -391,8 +422,16 @@
 
 -(void)loadDate
 {
-    NSString *newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+    NSString *newRequestWord = nil;
+    if ([self.lang isEqualToString:@"en"])
+    {
+        newRequestWord = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                     NSUTF8StringEncoding];
+    }
+    
+    newRequestWord = [self translatorForRussianText:self.requestCity.text];
+    
+    
     MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:newRequestWord];
     City *myCity = [helperWithName gettingCity];
     self.currentCity = myCity;
@@ -408,11 +447,16 @@
 
 - (void)startSearch
 {
-    BOOL isDataInDatabase;
+    BOOL isDataInDatabase = NO;
+    BOOL isIrrelevantData = NO;
     NSString *nameValue;
-   
-    nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
+    if ([self.lang isEqualToString:@"en"])
+    {
+        nameValue = [[self.requestCity.text copy] stringByAddingPercentEscapesUsingEncoding:
                                                                             NSUTF8StringEncoding];
+    }
+    
+    nameValue = [self translatorForRussianText:self.requestCity.text];
     
     MyHelperWithCityName *helperWithName = [[MyHelperWithCityName alloc] initWithCityName:nameValue];
     City *currCity = [helperWithName gettingCity];
@@ -420,10 +464,11 @@
     {
         MyHelperWithCity *helperWithCity = [[MyHelperWithCity alloc] initWithCity:currCity];
         [helperWithCity checkTheDatabaseForOutdatedForecastDataForCity:currCity];
+        isIrrelevantData = [helperWithCity checkTheDatabaseForIrrelevantData];
         isDataInDatabase = [helperWithName checkTheDatabaseForCityWithName];
     }
     
-    if (isDataInDatabase)
+    if (isDataInDatabase && !isIrrelevantData)
     {
         // NSLog(@"Start search in Database");
         [self loadDate];
@@ -504,6 +549,14 @@
     return newString;
 }
 
+- (NSString *)translatorForRussianText:(NSString *)russianText
+{
+    NSMutableString *russianLang = [russianText mutableCopy];
+    CFMutableStringRef russianLangRef = (__bridge CFMutableStringRef)russianLang;
+    CFStringTransform(russianLangRef, NULL, kCFStringTransformToLatin, false);
+    NSLog(@"Транслит  = %@", russianLang); // outputs "russkij âzyk"
+    return [russianLang copy];
+}
 
 #pragma mark - Navigation
 

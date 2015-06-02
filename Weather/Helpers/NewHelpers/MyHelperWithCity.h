@@ -27,7 +27,8 @@
 // Check Database Methods
 - (BOOL)checkTheDatabaseForCity:(City *)city;
 - (void)checkTheDatabaseForOutdatedForecastDataForCity:(City *)city;
-//- (void)deleteOutdatedForecastsForEveryCityInDatabase;
+// Checks the database for irrelevans data. If there are irrelevant data return YES;
+-(BOOL)checkTheDatabaseForIrrelevantData;
 
 
 @end

@@ -16,7 +16,6 @@
 #import "AppDelegate.h"
 #import "MyHelperWithCity.h"
 #import "MyHelperWithCityName.h"
-#import "MyHelperWithCoordinates.h"
 #import "MyCleanerDatabase.h"
 #import <CoreLocation/CoreLocation.h>
 #import <CoreLocation/CLLocationManager.h>

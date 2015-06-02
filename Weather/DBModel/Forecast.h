@@ -2,7 +2,7 @@
 //  Forecast.h
 //  Weather
 //
-//  Created by Admin on 14.05.15.
+//  Created by Admin on 02.06.15.
 //  Copyright (c) 2015 Admin. All rights reserved.
 //
 
@@ -28,6 +28,7 @@
 @property (nonatomic, retain) NSString * weatherStatus;
 @property (nonatomic, retain) NSString * windDirection;
 @property (nonatomic, retain) NSString * windSpeed;
+@property (nonatomic, retain) NSNumber * dateOfLastUpdate;
 @property (nonatomic, retain) City *city;
 
 @end

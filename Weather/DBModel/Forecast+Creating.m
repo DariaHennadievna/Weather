@@ -32,6 +32,7 @@
         myForecast.weatherStatus = [NSString stringWithFormat:@"%@", [data objectForKey:WEATHER_STATUS]];
         myForecast.weatherID     = [NSString stringWithFormat:@"%@", [data objectForKey:WEATHER_ID]];
         myForecast.date          = [data objectForKey:DATE];
+        myForecast.dateOfLastUpdate = [data objectForKey:LAST_UPDATE];
         myForecast.icon          = [NSString stringWithFormat:@"%@", [data objectForKey:ICON]];
         myForecast.city          = myCity;
     }
